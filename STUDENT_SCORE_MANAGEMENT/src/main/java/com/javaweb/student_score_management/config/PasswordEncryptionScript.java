@@ -1,4 +1,4 @@
-//package com.javaweb.config;
+//package com.javaweb.student_score_management.config;
 //
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,27 +14,27 @@
 //
 //        try {
 //            // Kết nối với cơ sở dữ liệu
-//            String url = "jdbc:mysql://localhost:3306/real_estate";
+//            String url = "jdbc:mysql://localhost:3306/student_score";
 //            String username = "root";
 //            String password = "";
 //
 //            Connection connection = DriverManager.getConnection(url, username, password);
 //
 //            // Lấy tất cả user và mật khẩu plain text
-//            String selectQuery = "SELECT accountID, password FROM account";
+//            String selectQuery = "SELECT MaTK, Password FROM taikhoan";
 //            PreparedStatement selectStmt = connection.prepareStatement(selectQuery);
 //
 //            ResultSet rs = selectStmt.executeQuery();
 //
 //            while (rs.next()) {
-//                int userId = rs.getInt("accountID");
-//                String plainTextPassword = rs.getString("password");
+//                int userId = rs.getInt("MaTK");
+//                String plainTextPassword = rs.getString("Password");
 //
 //                // Mã hóa mật khẩu
 //                String encodedPassword = passwordEncoder.encode(plainTextPassword);
 //
 //                // Cập nhật mật khẩu mã hóa vào cơ sở dữ liệu
-//                String updateQuery = "UPDATE account SET password = ? WHERE accountID = ?";
+//                String updateQuery = "UPDATE taikhoan SET Password = ? WHERE MaTK = ?";
 //                PreparedStatement updateStmt = connection.prepareStatement(updateQuery);
 //                updateStmt.setString(1, encodedPassword);
 //                updateStmt.setInt(2, userId);
