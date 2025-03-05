@@ -9,5 +9,4 @@ public class StudentScoreManagementApplication {
     public static void main(String[] args) {
         SpringApplication.run(StudentScoreManagementApplication.class, args);
     }
-
 }
