@@ -1,5 +1,7 @@
 package com.javaweb.student_score_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class SinhVienEntity {
     private String email;
 
     @OneToMany(mappedBy = "maSV")
+    @JsonManagedReference
     private List<DiemEntity> listDiem;
 
     @OneToMany(mappedBy = "maSV")
