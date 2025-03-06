@@ -1,5 +1,7 @@
 package com.javaweb.student_score_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,10 +13,12 @@ public class DiemEntity {
 
     @ManyToOne
     @JoinColumn(name = "maSV")
+    @JsonBackReference
     private SinhVienEntity maSV;
 
     @ManyToOne
     @JoinColumn(name = "maMH")
+    @JsonIgnore
     private MonHocEntity maMH;
 
     @Column(name = "diem")
