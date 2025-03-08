@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/css.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+            <li><a href="#" onclick="showSection('account-management')">Cấp tài khoản</a></li>
+            <li><a href="#" onclick="showSection('score-management')">Quản lý điểm</a></li>
+            <li><a href="#" onclick="showSection('subject-management')">Quản lý môn học</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Cấp tài khoản -->
+        <div id="account-management" class="content-section">
+            <h2>Cấp tài khoản</h2>
+            <form id="account-form">
+                <label for="account-type">Loại tài khoản:</label>
+                <select id="account-type" name="account-type">
+                    <option value="teacher">Giáo viên</option>
+                    <option value="student">Sinh viên</option>
+                </select>
+
+                <label for="username">Tên đăng nhập:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Mật khẩu:</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Tạo tài khoản</button>
+            </form>
+        </div>
+
+        <!-- Quản lý điểm -->
+        <div id="score-management" class="content-section" style="display:none;">
+            <h2>Quản lý điểm</h2>
+            <form id="score-form">
+                <label for="student-id">Mã sinh viên:</label>
+                <input type="text" id="student-id" name="student-id" required>
+
+                <label for="subject-id">Mã môn học:</label>
+                <input type="text" id="subject-id" name="subject-id" required>
+
+                <label for="score">Điểm:</label>
+                <input type="number" id="score" name="score" step="0.01" required>
+
+                <button type="submit">Cập nhật điểm</button>
+            </form>
+        </div>
+
+        <!-- Quản lý môn học -->
+        <div id="subject-management" class="content-section" style="display:none;">
+            <h2>Quản lý môn học</h2>
+            <form id="subject-form">
+                <label for="subject-name">Tên môn học:</label>
+                <input type="text" id="subject-name" name="subject-name" required>
+
+                <label for="subject-code">Mã môn học:</label>
+                <input type="text" id="subject-code" name="subject-code" required>
+
+                <button type="submit">Thêm môn học</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>
