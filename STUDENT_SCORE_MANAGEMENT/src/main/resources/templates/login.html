@@ -24,20 +24,20 @@
                 <div class="card shadow-lg" style="border-radius: 1rem;">
                     <div class="card-body p-5">
                         <div class="text-center mb-4">
-                            <img src="/img/OIP.png" alt="logo" style="height: 100px;" class="mb-3">
+                            <img src="/images/OIP.png" alt="logo" style="height: 100px;" class="mb-3">
                             <h4 class="fw-bold">Đăng nhập vào tài khoản</h4>
                         </div>
-                        <form>
+                        <form method="post" action="/login">
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="form2Example17">Địa chỉ Email</label>
-                                <input type="email" id="form2Example17" class="form-control form-control-lg" placeholder="Nhập email" />
+                                <input type="text" id="form2Example17" name="username" class="form-control form-control-lg" placeholder="Nhập email" />
                             </div>
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="form2Example27">Mật khẩu</label>
-                                <input type="password" id="form2Example27" class="form-control form-control-lg" placeholder="Nhập mật khẩu" />
+                                <input type="password" id="form2Example27" name="password" class="form-control form-control-lg" placeholder="Nhập mật khẩu" />
                             </div>
                             <div class="d-grid">
-                                <button class="btn btn-primary btn-lg" type="button">Đăng Nhập</button>
+                                <button class="btn btn-primary btn-lg" type="submit">Đăng Nhập</button>
                             </div>
                         </form>
                     </div>
