@@ -11,11 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/sinhvien")
+@RequestMapping("/sinhvien")
 public class SinhVienController {
 
     @Autowired
     private SinhVienRepository sinhVienRepository;
+
+    // Trang chủ là index
+    @GetMapping("/index")
+    public String sinhVienindex() {
+        return "sinhvien/index";
+    }
 
     @GetMapping("/{maSV}/diem")
     public ResponseEntity<?> getDiemBySinhVien(@PathVariable Integer maSV) {

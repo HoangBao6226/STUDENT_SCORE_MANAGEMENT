@@ -13,43 +13,50 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsSerImplement customUserDetailsService;
+    private final CustomSuccessHandler customSuccessHandler;
 
-    public SecurityConfig(CustomUserDetailsSerImplement customUserDetailsService) {
+    public SecurityConfig(CustomUserDetailsSerImplement customUserDetailsService, CustomSuccessHandler customSuccessHandler) {
         this.customUserDetailsService = customUserDetailsService;
+        this.customSuccessHandler = customSuccessHandler;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/sinhvien/bangdiem").permitAll() // 👈 API này được truy cập tự do
-                        .requestMatchers("/admin/**").hasAuthority("Admin")
-                        .requestMatchers("/giangvien/**").hasAuthority("GiangVien")
-                        .requestMatchers("/sinhvien/**").hasAuthority("SinhVien")
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(authorize -> {
+                    try {
+                        authorize
+                                .requestMatchers("/sinhvien/bangdiem").permitAll()
+                                .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                                .requestMatchers("/admin/index").hasAuthority("Admin")
+                                .requestMatchers("/giangvien/index").hasAuthority("GiangVien")
+                                .requestMatchers("/sinhvien/index").hasAuthority("SinhVien")
+                                .anyRequest().authenticated();
+
+//                        System.out.println("DEBUG: Cấu hình bảo mật đã tải thành công!");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .successHandler(customSuccessHandler)
+                        .permitAll()
                 )
-
-                .formLogin(withDefaults())
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .permitAll()
-//                )
-
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -2,8 +2,6 @@ package com.javaweb.student_score_management.entity;
 
 import jakarta.persistence.*;
 
-import javax.management.relation.Role;
-
 @Entity
 @Table(name = "taikhoan")
 public class TaiKhoanEntity {
