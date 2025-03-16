@@ -15,13 +15,10 @@ import java.util.List;
 //}
 @Repository
 public interface DiemRepository extends JpaRepository<DiemEntity, Integer> {
-    @Query("SELECT new com.javaweb.student_score_management.DTO.DiemDTO(d.maDiem, gv.tenGV, mh.tenMH, mh.soTinChi, d.diem) " +
-            "FROM DiemEntity d " +
-            "JOIN d.maSV sv " +
-            "JOIN d.maMH mh " +
-            "JOIN mh.maGV gv " +
+    @Query("SELECT d FROM DiemEntity d " +
+            "JOIN FETCH d.maSV sv " +
+            "JOIN FETCH d.maMH mh " +
+            "JOIN FETCH mh.maGV gv " +
             "WHERE sv.maSV = :maSV")
-    List<DiemDTO> getDiemDetailsByMaSV(@Param("maSV") Integer maSV);
-
-
+    List<DiemEntity> getDiemDetailsByMaSV(@Param("maSV") Integer maSV);
 }

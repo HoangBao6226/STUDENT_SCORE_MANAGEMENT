@@ -35,12 +35,9 @@ public class DiemController {
     private DiemService diemService;
 
     @GetMapping("/bangdiem")
-    public ResponseEntity<?> xemBangDiem(@RequestParam("maSV") Integer maSV) {
-        try {
-            List<DiemDTO> diemList = diemService.getDiemDetailsBySinhVienID(maSV);
-            return ResponseEntity.ok(diemList);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public String xemBangDiem(@RequestParam("maSV") Integer maSV, Model model) {
+        List<DiemEntity> diemList = diemService.getDiemDetailsBySinhVienID(maSV);
+        model.addAttribute("diemList", diemList);
+        return "bangdiem"; // Trả về template Thymeleaf "bangdiem.html"
     }
 }

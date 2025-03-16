@@ -1,6 +1,7 @@
 package com.javaweb.student_score_management.service.implement;
 
 import com.javaweb.student_score_management.DTO.DiemDTO;
+import com.javaweb.student_score_management.entity.DiemEntity;
 import com.javaweb.student_score_management.repository.DiemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class DiemService {
     @Autowired
     private DiemRepository diemRepository;
 
-    public List<DiemDTO> getDiemDetailsBySinhVienID(Integer maSV) {
+    public List<DiemEntity> getDiemDetailsBySinhVienID(Integer maSV) {
         return diemRepository.getDiemDetailsByMaSV(maSV);
     }
 }
