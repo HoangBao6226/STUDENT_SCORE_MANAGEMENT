@@ -27,6 +27,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        //bỏ qua đăng nhập để test
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(authorize -> {
+//                    try {
+//                        authorize
+//                                .requestMatchers("/**").permitAll() // 🔥 Bỏ qua xác thực cho tất cả request
+//                                .anyRequest().permitAll();
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                })
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> {

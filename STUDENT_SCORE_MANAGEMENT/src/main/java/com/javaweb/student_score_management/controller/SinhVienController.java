@@ -17,7 +17,7 @@ public class SinhVienController {
     @Autowired
     private SinhVienRepository sinhVienRepository;
 
-    // Trang chủ là index
+
     @GetMapping("/index")
     public String sinhVienindex() {
         return "sinhvien/index";
