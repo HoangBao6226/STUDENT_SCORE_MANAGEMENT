@@ -1,76 +1,118 @@
 <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/css.css">
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head th:replace="~{admin/layout/head :: head}"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Header -->
+    <header th:replace="~{admin/layout/header :: header}"></header>
+
     <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Admin Dashboard</h2>
-        <ul>
-            <li><a href="#" onclick="showSection('account-management')">Cấp tài khoản</a></li>
-            <li><a href="#" onclick="showSection('score-management')">Quản lý điểm</a></li>
-            <li><a href="#" onclick="showSection('subject-management')">Quản lý môn học</a></li>
-        </ul>
+    <div th:replace="~{admin/layout/sidebar :: sidebar}"></div>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Content Header -->
+
+        <!-- Main Content -->
+        <section class="content">
+            <!-- Cấp tài khoản -->
+            <div id="account-management" class="content-section active">
+                <h2>Cấp tài khoản</h2>
+                <form id="account-form">
+                    <label for="account-type">Loại tài khoản:</label>
+                    <select id="account-type" name="role" required>
+                        <option value="Admin">Admin</option>
+                        <option value="GiangVien">Giảng viên</option>
+                        <option value="SinhVien">Sinh viên</option>
+                    </select>
+
+                    <label for="username">Tên đăng nhập:</label>
+                    <input type="text" id="username" name="username" required>
+
+                    <label for="email">Gmail:</label>
+                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <button type="submit">Tạo tài khoản</button>
+                </form>
+
+            </div>
+
+            <!-- Quản lý điểm -->
+            <div id="score-management" class="content-section" style="display: none;">
+                <h2>Quản lý điểm</h2>
+                <form id="score-form">
+                    <label for="student-id">Mã sinh viên:</label>
+                    <input type="text" id="student-id" name="student-id" required>
+
+                    <label for="subject-id">Mã môn học:</label>
+                    <input type="text" id="subject-id" name="subject-id" required>
+
+                    <label for="score">Điểm:</label>
+                    <input type="number" id="score" name="score" step="0.01" required>
+
+                    <button type="submit">Cập nhật điểm</button>
+                </form>
+            </div>
+
+            <!-- Quản lý môn học -->
+            <div id="subject-management" class="content-section" style="display: none;">
+                <h2>Quản lý môn học</h2>
+                <form id="subject-form">
+                    <label for="subject-name">Tên môn học:</label>
+                    <input type="text" id="subject-name" name="subject-name" required>
+
+                    <label for="subject-code">Mã môn học:</label>
+                    <input type="text" id="subject-code" name="subject-code" required>
+
+                    <button type="submit">Thêm môn học</button>
+                </form>
+            </div>
+
+            <!-- Tổng quan người dùng -->
+            <div id="user-overview" class="content-section" style="display: none;">
+                <h2>Tổng quan người dùng</h2>
+                <div class="user-stats">
+                    <div class="stat-card">
+                        <h3>Số sinh viên</h3>
+                        <p id="student-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Số giáo viên</h3>
+                        <p id="teacher-count">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Tổng số môn học</h3>
+                        <p id="subject-count">0</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Cấp tài khoản -->
-        <div id="account-management" class="content-section">
-            <h2>Cấp tài khoản</h2>
-            <form id="account-form">
-                <label for="account-type">Loại tài khoản:</label>
-                <select id="account-type" name="account-type">
-                    <option value="teacher">Giáo viên</option>
-                    <option value="student">Sinh viên</option>
-                </select>
+    <!-- Footer -->
+    <div th:replace="~{admin/layout/footer :: footer}"></div>
+</div>
 
-                <label for="username">Tên đăng nhập:</label>
-                <input type="text" id="username" name="username" required>
+<!-- Scripts -->
+<div th:replace="~{admin/layout/scripts :: scripts}"></div>
 
-                <label for="password">Mật khẩu:</label>
-                <input type="password" id="password" name="password" required>
+<!-- Script điều hướng section -->
+<script>
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach(section => section.style.display = 'none');
 
-                <button type="submit">Tạo tài khoản</button>
-            </form>
-        </div>
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+        }
+    }
+</script>
 
-        <!-- Quản lý điểm -->
-        <div id="score-management" class="content-section" style="display:none;">
-            <h2>Quản lý điểm</h2>
-            <form id="score-form">
-                <label for="student-id">Mã sinh viên:</label>
-                <input type="text" id="student-id" name="student-id" required>
-
-                <label for="subject-id">Mã môn học:</label>
-                <input type="text" id="subject-id" name="subject-id" required>
-
-                <label for="score">Điểm:</label>
-                <input type="number" id="score" name="score" step="0.01" required>
-
-                <button type="submit">Cập nhật điểm</button>
-            </form>
-        </div>
-
-        <!-- Quản lý môn học -->
-        <div id="subject-management" class="content-section" style="display:none;">
-            <h2>Quản lý môn học</h2>
-            <form id="subject-form">
-                <label for="subject-name">Tên môn học:</label>
-                <input type="text" id="subject-name" name="subject-name" required>
-
-                <label for="subject-code">Mã môn học:</label>
-                <input type="text" id="subject-code" name="subject-code" required>
-
-                <button type="submit">Thêm môn học</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="/js/script.js"></script>
 </body>
 </html>
