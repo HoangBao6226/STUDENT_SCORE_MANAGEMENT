@@ -1,0 +1,23 @@
+<!-- File: admin/layout/sidebar.html -->
+<aside class="main-sidebar" th:fragment="sidebar">
+	<section class="sidebar">
+		<!-- Sidebar user panel -->
+		<div class="user-panel">
+			<div class="pull-left image">
+<!--				<img th:src="@{}" class="img-circle" alt="User Image">-->
+			</div>
+			<div class="pull-left info">
+				<span style="font-weight: bold">Xin Chào !</span><br><br>
+				<span sec:authentication="name"></span>
+			</div>
+		</div>
+		<hr>
+
+		<ul class="sidebar-menu" data-widget="tree">
+			<li><a href="#" onclick="showSection('account-management')"><i class="fa fa-user-plus"></i> Cấp tài khoản</a></li>
+			<li><a href="#" onclick="showSection('score-management')"><i class="fa fa-graduation-cap"></i> Quản lý điểm</a></li>
+			<li><a href="#" onclick="showSection('subject-management')"><i class="fa fa-book"></i> Quản lý môn học</a></li>
+			<li><a href="#" onclick="showSection('user-overview')"><i class="fa fa-users"></i> Tổng quan người dùng</a></li>
+		</ul>
+	</section>
+</aside>
