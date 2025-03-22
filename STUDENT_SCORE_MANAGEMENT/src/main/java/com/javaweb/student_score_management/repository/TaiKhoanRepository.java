@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoanEntity, Integer> {
     Optional<TaiKhoanEntity> findByUsername(String username);
-    List<TaiKhoanEntity> findByMaAdmin_MaAdmin(Integer maAdmin);
+    boolean existsByUsername(String username);
+
 }

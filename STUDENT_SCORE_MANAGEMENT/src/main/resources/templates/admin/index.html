@@ -21,12 +21,14 @@
             <div id="account-management" class="content-section active">
                 <h2>Cấp tài khoản</h2>
                 <form id="account-form">
-                    <label for="account-type">Loại tài khoản:</label>
-                    <select id="account-type" name="role" required>
-                        <option value="Admin">Admin</option>
-                        <option value="GiangVien">Giảng viên</option>
-                        <option value="SinhVien">Sinh viên</option>
+                    <label for="account_type">Loại tài khoản:</label>
+                    <select id="account_type" name="account_type" required>
+                        <option value="GiangVien" name="GiangVien">Giảng viên</option>
+                        <option value="SinhVien" name="SinhVien">Sinh viên</option>
                     </select>
+
+                    <label for="name">Tên:</label>
+                    <input type="text" id="name" name="name" required>
 
                     <label for="username">Tên đăng nhập:</label>
                     <input type="text" id="username" name="username" required>

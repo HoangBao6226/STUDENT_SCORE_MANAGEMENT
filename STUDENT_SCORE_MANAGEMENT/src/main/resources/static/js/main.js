@@ -31,15 +31,36 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Xử lý form Cấp tài khoản
-    document.getElementById('account-form').addEventListener('submit', function (event) {
+    document.getElementById("account-form").addEventListener("submit", function(event) {
         event.preventDefault();
-        const accountType = document.getElementById('account-type').value;
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
 
-        console.log(`Tạo tài khoản: ${accountType}, Tên đăng nhập: ${username}, Mật khẩu: ${password}`);
-        alert('Tài khoản đã được tạo thành công!');
-        this.reset();
+        // // Lấy dữ liệu từ form
+        // const data = {
+        //     role: document.getElementById("account_type").value.trim().toString(),
+        //     username: document.getElementById("username").value,
+        //     email: document.getElementById("email").value,
+        //     password: document.getElementById("password").value
+        // };
+        // console.log(data);
+        // Gửi API bằng Fetch
+
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData);
+
+        fetch(`/admin/addTaiKhoan`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                document.getElementById("account-form").reset(); // Reset form sau khi tạo tài khoản
+            })
+            .catch(error => {
+                alert("error");
+                console.error("Loi:", error);
+            });
     });
 
     // Xử lý form Quản lý điểm
