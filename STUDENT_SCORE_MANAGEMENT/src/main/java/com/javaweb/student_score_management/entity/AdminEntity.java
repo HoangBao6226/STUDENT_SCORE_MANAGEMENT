@@ -1,5 +1,6 @@
 package com.javaweb.student_score_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class AdminEntity {
     private String email;
 
     @OneToMany(mappedBy = "maAdmin")
+    @JsonManagedReference("admin-taiKhoan")
     private List<TaiKhoanEntity> listTaiKhoan;
 
     public Integer getMaAdmin() {

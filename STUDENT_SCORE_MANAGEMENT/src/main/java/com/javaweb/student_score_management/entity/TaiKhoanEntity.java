@@ -1,5 +1,6 @@
 package com.javaweb.student_score_management.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,8 @@ public class TaiKhoanEntity {
     @Column(name = "username")
     private String username;
 
+
+
     @Column(name = "password")
     private String password;
 
@@ -26,16 +29,21 @@ public class TaiKhoanEntity {
 
     @ManyToOne
     @JoinColumn(name = "maAdmin")
+    @JsonBackReference("admin-taiKhoan")
     private AdminEntity maAdmin;
 
     @ManyToOne
     @JoinColumn(name = "maGV")
+    @JsonBackReference("giangvien-taiKhoan")
     private GiangVienEntity maGV;
 
     @ManyToOne
     @JoinColumn(name = "maSV")
+    @JsonBackReference("sinhvien-taiKhoan")
     private SinhVienEntity maSV;
 
+    public TaiKhoanEntity() {
+    }
 
     public Integer getMaTK() {
         return maTK;
@@ -52,6 +60,8 @@ public class TaiKhoanEntity {
     public void setUsername(String username) {
         this.username = username;
     }
+
+
 
     public String getPassword() {
         return password;

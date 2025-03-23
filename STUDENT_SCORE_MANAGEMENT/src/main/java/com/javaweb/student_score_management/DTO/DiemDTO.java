@@ -2,18 +2,30 @@ package com.javaweb.student_score_management.DTO;
 
 public class DiemDTO {
     private Integer maDiem;
+    private Integer maSV;
+    private Integer maMH;
     private String tenGV;
     private String tenMH;
     private Integer soTinChi;
     private Float diem;
 
-    public DiemDTO(Integer maDiem, String tenGV, String tenMH, Integer soTinChi, Float diem) {
+    public DiemDTO(Integer maDiem, Integer maSV, Integer maMH, String tenGV, String tenMH, Integer soTinChi, Float diem) {
         this.maDiem = maDiem;
+        this.maSV = maSV;
+        this.maMH = maMH;
         this.tenGV = tenGV;
         this.tenMH = tenMH;
         this.soTinChi = soTinChi;
         this.diem = diem;
     }
+
+//    public DiemDTO(Integer maDiem, String tenGV, String tenMH, Integer soTinChi, Float diem) {
+//        this.maDiem = maDiem;
+//        this.tenGV = tenGV;
+//        this.tenMH = tenMH;
+//        this.soTinChi = soTinChi;
+//        this.diem = diem;
+//    }
 
     // Getter và Setter
     public Integer getMaDiem() {
@@ -54,5 +66,21 @@ public class DiemDTO {
 
     public void setDiem(Float diem) {
         this.diem = diem;
+    }
+
+    public Integer getMaSV() {
+        return maSV;
+    }
+
+    public void setMaSV(Integer maSV) {
+        this.maSV = maSV;
+    }
+
+    public Integer getMaMH() {
+        return maMH;
+    }
+
+    public void setMaMH(Integer maMH) {
+        this.maMH = maMH;
     }
 }
