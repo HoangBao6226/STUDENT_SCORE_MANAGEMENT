@@ -1,6 +1,7 @@
 package com.javaweb.student_score_management.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class MonHocEntity {
     private GiangVienEntity maGV;
 
     @OneToMany(mappedBy = "maMH")
+    @JsonIgnore
     private List<DiemEntity> listDiem;
 
     public Integer getMaMH() {

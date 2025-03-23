@@ -2,6 +2,7 @@ package com.javaweb.student_score_management.controller;
 
 import com.javaweb.student_score_management.entity.TaiKhoanEntity;
 import com.javaweb.student_score_management.repository.TaiKhoanRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,10 +47,10 @@ public class AdminController {
     }
 
     // Xử lý thêm tài khoản
-    @PostMapping("/addTaiKhoan")
-    public String addAccount(@ModelAttribute TaiKhoanEntity taiKhoan) {
-        taiKhoanRepository.save(taiKhoan);
-        return "redirect:/admin/index/listTaiKhoan/index";
+    @PostMapping("/add")
+    public ResponseEntity<TaiKhoanEntity> addAccount(@RequestBody TaiKhoanEntity taiKhoan) {
+        TaiKhoanEntity savedTaiKhoan = taiKhoanRepository.save(taiKhoan);
+        return ResponseEntity.ok(savedTaiKhoan);
     }
 
     // Form chỉnh sửa tài khoản
