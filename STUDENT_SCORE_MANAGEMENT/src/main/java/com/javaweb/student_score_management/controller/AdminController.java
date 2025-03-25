@@ -103,7 +103,7 @@ public class AdminController {
     }
 
     // Xóa tài khoản (JSON)
-    @DeleteMapping("/deleteTaiKhoan/{id}")
+    @GetMapping("/deleteTaiKhoan/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteAccount(@PathVariable Integer id) {
         boolean deleted = taiKhoanService.delete(id);

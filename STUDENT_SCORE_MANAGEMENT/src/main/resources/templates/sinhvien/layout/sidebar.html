@@ -1,0 +1,34 @@
+<!-- File: admin/layout/sidebar.html -->
+<aside class="main-sidebar" th:fragment="sidebar">
+	<section class="sidebar">
+		<!-- Sidebar user panel -->
+		<div class="user-panel">
+			<div class="pull-left image">
+				<img th:src="@{/images/avatar5.png}" class="img-circle" alt="User Image">
+			</div>
+			<div class="pull-left info">
+				<span style="font-weight: bold">Xin Chào !</span><br><br>
+				<span sec:authentication="name"></span>
+			</div>
+		</div>
+		<hr>
+
+		<ul class="sidebar-menu" data-widget="tree">
+			<li>
+				<a href="dangkimonhoc.html">
+					<i class="fa fa-book"></i> <span>Đăng ký môn</span>
+				</a>
+			</li>
+			<li>
+				<a href="#grades">
+					<i class="fa fa-table"></i>
+					<span>Bảng điểm</span>
+				</a>
+			</li>
+
+		</ul>
+
+
+		</ul>
+	</section>
+</aside>

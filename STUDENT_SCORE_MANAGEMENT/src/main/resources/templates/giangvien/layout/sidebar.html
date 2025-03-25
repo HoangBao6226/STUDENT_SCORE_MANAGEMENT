@@ -1,0 +1,60 @@
+<!-- File: admin/layout/sidebar.html -->
+<aside class="main-sidebar" th:fragment="sidebar">
+	<section class="sidebar">
+		<!-- Sidebar user panel -->
+		<div class="user-panel">
+			<div class="pull-left image">
+				<img th:src="@{/images/avatar5.png}" class="img-circle" alt="User Image">
+			</div>
+			<div class="pull-left info">
+				<span style="font-weight: bold">Xin Chào !</span><br><br>
+				<span sec:authentication="name"></span>
+			</div>
+		</div>
+		<hr>
+
+		<ul class="sidebar-menu" data-widget="tree">
+
+			<!-- Quản lý tài khoản -->
+			<li>
+				<a href="#profile">
+					<i class="fa fa-user"></i>
+					<span>Thông tin cá nhân</span>
+				</a>
+			</li>
+			<li>
+				<a href="#courses">
+					<i class="fa fa-book"></i>
+					<span>Danh sách khóa học</span>
+				</a>
+			</li>
+			<li>
+				<a href="#schedule">
+					<i class="fa fa-calendar"></i>
+					<span>Lịch giảng dạy</span>
+				</a>
+			</li>
+			<li>
+				<a href="#students">
+					<i class="fa fa-users"></i>
+					<span>Quản lý sinh viên</span>
+				</a>
+			</li>
+			<li>
+				<a href="#grades">
+					<i class="fa fa-table"></i>
+					<span>Bảng điểm</span>
+				</a>
+			</li>
+			<li>
+				<a href="#documents">
+					<i class="fa fa-file"></i>
+					<span>Tài liệu giảng dạy</span>
+				</a>
+			</li>
+		</ul>
+
+
+		</ul>
+	</section>
+</aside>

@@ -1,10 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
 
+    <header th:replace="admin/layout/header :: header"></header>
+    <div th:replace="admin/layout/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Danh Sách Tài Khoản Người Dùng</h1>
+            <br>
+            <div>
+                <a th:href="@{/admin/addTaiKhoan}" class="btn btn-success">Thêm Tài Khoản</a>
+            </div>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <!-- Bảng Admin -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh Sách Admin</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th style="width: 20%;">Username</th>
+                            <th style="width: 25%;">Password</th>
+                            <th style="width: 25%;">Tên Admin</th>
+                            <th style="width: 20%;">Tùy Chọn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="account : ${list}" th:if="${account.role.name() == 'Admin'}">
+                            <td th:text="${account.maTK}"></td>
+                            <td th:text="${account.username}"></td>
+                            <td th:text="${#strings.substring(account.password, 0, 10)} + '...'"></td>
+                            <td th:text="${account.maAdmin != null ? account.maAdmin.tenAdmin : 'N/A'}"></td>
+                            <td>
+                                <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
+                                <a th:href="@{/admin/deleteTaiKhoan/{id}(id=${account.maTK})}"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')"
+                                   class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                        <tr th:unless="${#lists.size(list.?[role.name() == 'Admin']) > 0}">
+                            <td colspan="5" style="text-align: center;">Không có tài khoản Admin nào</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bảng Giảng Viên -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh Sách Giảng Viên</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th style="width: 20%;">Username</th>
+                            <th style="width: 25%;">Password</th>
+                            <th style="width: 25%;">Tên Giảng Viên</th>
+                            <th style="width: 20%;">Tùy Chọn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="account : ${list}" th:if="${account.role.name() == 'GiangVien'}">
+                            <td th:text="${account.maTK}"></td>
+                            <td th:text="${account.username}"></td>
+                            <td th:text="${#strings.substring(account.password, 0, 10)} + '...'"></td>
+                            <td th:text="${account.maGV != null ? account.maGV.tenGV : 'N/A'}"></td>
+                            <td>
+                                <a th:ref="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
+                                <a th:href="@{/admin/deleteTaiKhoan/{id}(id=${account.maTK})}"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')"
+                                   class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                        <tr th:unless="${#lists.size(list.?[role.name() == 'GiangVien']) > 0}">
+                            <td colspan="5" style="text-align: center;">Không có tài khoản Giảng Viên nào</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bảng Sinh Viên -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh Sách Sinh Viên</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%;">ID</th>
+                            <th style="width: 20%;">Username</th>
+                            <th style="width: 25%;">Password</th>
+                            <th style="width: 25%;">Tên Sinh Viên</th>
+                            <th style="width: 20%;">Tùy Chọn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="account : ${list}" th:if="${account.role.name() == 'SinhVien'}">
+                            <td th:text="${account.maTK}"></td>
+                            <td th:text="${account.username}"></td>
+                            <td th:text="${#strings.substring(account.password, 0, 10)} + '...'"></td>
+                            <td th:text="${account.maSV != null ? account.maSV.tenSV : 'N/A'}"></td>
+                            <td>
+                                <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
+                                <a th:href="@{/admin/deleteTaiKhoan/{id}(id=${account.maTK})}"
+                                   onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')"
+                                   class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                        <tr th:unless="${#lists.size(list.?[role.name() == 'SinhVien']) > 0}">
+                            <td colspan="5" style="text-align: center;">Không có tài khoản Sinh Viên nào</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="admin/layout/footer :: footer"></div>
+</div>
+
+<div th:replace="admin/layout/scripts :: scripts"></div>
 </body>
 </html>

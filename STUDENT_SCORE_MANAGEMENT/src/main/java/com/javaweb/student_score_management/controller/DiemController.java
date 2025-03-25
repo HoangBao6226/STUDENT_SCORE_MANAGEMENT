@@ -3,36 +3,20 @@ package com.javaweb.student_score_management.controller;
 import com.javaweb.student_score_management.DTO.DiemDTO;
 import com.javaweb.student_score_management.entity.DiemEntity;
 import com.javaweb.student_score_management.service.implement.DiemService;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-//@RestController
-//public class DiemController {
-//    @Autowired
-//    private DiemService diemService;
-//
-//    @GetMapping("/sinhvien/bangdiem")
-//    public ResponseEntity<?> xemBangDiem(@RequestParam("maSV") Integer maSV) {
-//        try {
-//            List<DiemEntity> diemList = diemService.getDiembySinhVienID(maSV);
-//            return ResponseEntity.ok(diemList);
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//        }
-//    }
-//}
-@RestController
+@Controller
 @RequestMapping
 public class DiemController {
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(DiemController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DiemController.class);
 
     @Autowired
     private DiemService diemService;
@@ -40,8 +24,8 @@ public class DiemController {
     public DiemController(DiemService diemService) {
         this.diemService = diemService;
     }
-    //Sinh Vien
 
+    // Sinh Vien: Render trang Thymeleaf
     @GetMapping("/sinhvien/bangdiem")
     public String xemBangDiem(@RequestParam("maSV") Integer maSV, Model model) {
         List<DiemEntity> diemList = diemService.getDiemDetailsBySinhVienID(maSV);
@@ -49,16 +33,24 @@ public class DiemController {
         return "bangdiem";
     }
 
-    //Admin
-
-
+    // Admin: Render trang Thymeleaf nhúng React
     @GetMapping("/admin/diem")
-    public ResponseEntity<List<DiemDTO>> getAllDiem() {
+    public String quanLyDiem(Model model) {
         List<DiemDTO> diemList = diemService.getAllDiem();
-        return ResponseEntity.ok(diemList);
+        model.addAttribute("danhSachDiem", diemList);
+        return "admin/diem/index";
     }
 
-    @PostMapping("/admin/diem")
+    // API trả về JSON cho React gọi
+    @GetMapping("/api/admin/diem")
+    @ResponseBody
+    public List<DiemDTO> getAllDiem() {
+        List<DiemDTO> diemList = diemService.getAllDiem();
+        return diemList;
+    }
+
+    @PostMapping("/api/admin/diem")
+    @ResponseBody
     public ResponseEntity<String> addDiem(@RequestBody DiemDTO diemDTO) {
         logger.info("Dữ liệu điểm nhận được: {}", diemDTO);
         boolean created = diemService.createDiem(diemDTO);
@@ -69,7 +61,8 @@ public class DiemController {
         }
     }
 
-    @PutMapping("/admin/diem/{id}")
+    @PutMapping("/api/admin/diem/{id}")
+    @ResponseBody
     public ResponseEntity<String> updateDiem(@PathVariable Integer id, @RequestBody DiemDTO diemDTO) {
         logger.info("Cập nhật điểm ID {} với dữ liệu: {}", id, diemDTO);
         boolean updated = diemService.updateDiem(id, diemDTO);
@@ -80,7 +73,8 @@ public class DiemController {
         }
     }
 
-    @DeleteMapping("/admin/diem/{id}")
+    @DeleteMapping("/api/admin/diem/{id}")
+    @ResponseBody
     public ResponseEntity<String> deleteDiem(@PathVariable Integer id) {
         logger.info("Xóa điểm ID: {}", id);
         boolean deleted = diemService.deleteDiem(id);

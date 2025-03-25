@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<!-- head -->
+<head th:replace="admin/layout/head :: head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thêm Môn Học</title>
+    <!-- Bootstrap đã có trong head fragment, không cần thêm lại -->
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <!-- header -->
+    <header th:replace="admin/layout/header :: header"></header>
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <div th:replace="admin/layout/sidebar :: sidebar"></div>
+    <!-- =============================================== -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>Thêm Môn Học</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a th:href="@{/admin/monhoc}">Quản Lý Môn Học</a></li>
+                <li class="active">Thêm Môn Học</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thêm Môn Học Mới</h3>
+                </div>
+                <div class="box-body">
+                    <form th:action="@{/api/admin/monhoc}" th:object="${monHoc}" method="post">
+                        <div class="form-group">
+                            <label>Mã MH</label>
+                            <input type="text" class="form-control" th:field="*{maMH}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Tên Môn Học</label>
+                            <input type="text" class="form-control" th:field="*{tenMH}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Số Tín Chỉ</label>
+                            <input type="number" class="form-control" th:field="*{soTinChi}" />
+                        </div>
+                        <div class="form-group">
+                            <label>Mã Giảng Viên</label>
+                            <input type="text" class="form-control" th:field="*{maGV}" />
+                        </div>
+                        <button type="submit" class="btn btn-success">Thêm</button>
+                        <a th:href="@{/admin/monhoc}" class="btn btn-secondary">Quay lại</a>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="admin/layout/footer :: footer"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- Scripts (bao gồm jQuery và các script khác từ layout) -->
+<div th:replace="admin/layout/scripts :: scripts"></div>
+
+</body>
+</html>
