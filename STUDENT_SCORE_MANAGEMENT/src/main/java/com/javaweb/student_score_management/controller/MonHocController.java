@@ -1,6 +1,7 @@
 package com.javaweb.student_score_management.controller;
 
 import com.javaweb.student_score_management.DTO.DangKyMonHocDTO;
+import com.javaweb.student_score_management.DTO.DiemDTO;
 import com.javaweb.student_score_management.DTO.MonHocDTO;
 import com.javaweb.student_score_management.DTO.XoaMonHocDTO;
 import com.javaweb.student_score_management.entity.DiemEntity;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,37 +62,32 @@ public class MonHocController {
                 diemService.dangKyMonHoc(maSV, maMH);
             }
             response.put("message", "Đăng ký môn học thành công!");
+
+            // Lấy danh sách điểm mới với DiemDTO
+            List<DiemDTO> diemList = diemService.getDiemBySinhVienID(maSV);
+            response.put("diemList", diemList);
+            response.put("totalCourses", diemList.size());
         } catch (Exception e) {
             response.put("message", "Lỗi: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
-
-        List<DiemEntity> diemList = diemService.getDiemDetailsBySinhVienID(maSV);
-        response.put("diemList", diemList);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/sinhvien/xoa")
-    public ResponseEntity<Map<String, Object>> xoaMonHoc(@RequestBody XoaMonHocDTO xoaMonHocDTO) {
-        Map<String, Object> response = new HashMap<>();
-        Integer maSV = xoaMonHocDTO.getMaSV();
-        List<Integer> maMHList = xoaMonHocDTO.getMaMHList();
-
+    public ResponseEntity<Map<String, Object>> xoaNhieuMonHoc(@RequestBody XoaMonHocDTO xoaMonHocDTO) {
+        Map<String, Object> response;
         try {
-            for (Integer maMH : maMHList) {
-                diemService.xoaMonHoc(maSV, maMH);
-            }
-            response.put("message", "Hủy đăng ký môn học thành công!");
+            response = diemService.xoaNhieuMonHoc(xoaMonHocDTO.getMaSV(), xoaMonHocDTO.getMaMHList());
         } catch (Exception e) {
+            response = new HashMap<>();
             response.put("message", "Lỗi: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
 
-        List<DiemEntity> diemList = diemService.getDiemDetailsBySinhVienID(maSV);
-        response.put("diemList", diemList);
-
         return ResponseEntity.ok(response);
     }
+
 
 }

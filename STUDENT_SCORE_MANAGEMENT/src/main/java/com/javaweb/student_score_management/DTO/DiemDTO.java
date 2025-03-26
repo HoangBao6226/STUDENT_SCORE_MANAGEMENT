@@ -19,14 +19,6 @@ public class DiemDTO {
         this.diem = diem;
     }
 
-//    public DiemDTO(Integer maDiem, String tenGV, String tenMH, Integer soTinChi, Float diem) {
-//        this.maDiem = maDiem;
-//        this.tenGV = tenGV;
-//        this.tenMH = tenMH;
-//        this.soTinChi = soTinChi;
-//        this.diem = diem;
-//    }
-
     // Getter và Setter
     public Integer getMaDiem() {
         return maDiem;
