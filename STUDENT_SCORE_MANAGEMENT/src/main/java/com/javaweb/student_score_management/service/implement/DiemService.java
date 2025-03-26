@@ -177,11 +177,12 @@ public class DiemService {
     //soTinChi → Số tín chỉ
     //diem → Điểm số
     //DTO có chức năng là sao chép các trường thông tin bên ENTITY để chỉ hiện những thông tin cần thiết/cho phép để hiển thị
-    private DiemDTO convertToDTO(DiemEntity diemEntity) {
+    public DiemDTO convertToDTO(DiemEntity diemEntity) {
         return new DiemDTO(
                 diemEntity.getMaDiem(),
                 diemEntity.getMaSV().getMaSV(),
                 diemEntity.getMaMH().getMaMH(),
+                diemEntity.getMaSV().getTenSV(),
                 diemEntity.getMaMH().getMaGV().getTenGV(),
                 diemEntity.getMaMH().getTenMH(),
                 diemEntity.getMaMH().getSoTinChi(),
@@ -204,5 +205,28 @@ public class DiemService {
         return danhSachDiem.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+    }
+
+    //Lấy DSSV (Diem) theo MaGV va MaMH
+    public List<DiemDTO> getSV_Diem(int maMH, int maGV) {
+
+        MonHocEntity monHocEntity = monHocRepository.findById(maMH).get();
+
+        List<DiemEntity> listD1 = diemRepository.findByMaMH(monHocEntity);
+
+        List<DiemDTO> diemDTO = new ArrayList<>();
+
+        for(DiemEntity diemEntity : listD1){
+
+            if(maGV == diemEntity.getMaMH().getMaGV().getMaGV())
+            {
+                DiemDTO diemDTO1 = convertToDTO(diemEntity);
+                diemDTO.add(diemDTO1);
+            }
+
+        }
+
+        return diemDTO;
+
     }
 }

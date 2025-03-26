@@ -28,5 +28,5 @@ public interface DiemRepository extends JpaRepository<DiemEntity, Integer> {
 
     List<DiemEntity> findByMaSVAndMaMH(SinhVienEntity maSV, MonHocEntity maMH);
 
-
+    List<DiemEntity> findByMaMH(MonHocEntity maMH);
 }
