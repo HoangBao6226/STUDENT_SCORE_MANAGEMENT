@@ -4,15 +4,17 @@ public class DiemDTO {
     private Integer maDiem;
     private Integer maSV;
     private Integer maMH;
+    private String tenSV;
     private String tenGV;
     private String tenMH;
     private Integer soTinChi;
     private Float diem;
 
-    public DiemDTO(Integer maDiem, Integer maSV, Integer maMH, String tenGV, String tenMH, Integer soTinChi, Float diem) {
+    public DiemDTO(Integer maDiem, Integer maSV, Integer maMH, String tenSV, String tenGV, String tenMH, Integer soTinChi, Float diem) {
         this.maDiem = maDiem;
         this.maSV = maSV;
         this.maMH = maMH;
+        this.tenSV = tenSV;
         this.tenGV = tenGV;
         this.tenMH = tenMH;
         this.soTinChi = soTinChi;
@@ -74,5 +76,13 @@ public class DiemDTO {
 
     public void setMaMH(Integer maMH) {
         this.maMH = maMH;
+    }
+
+    public String getTenSV() {
+        return tenSV;
+    }
+
+    public void setTenSV(String tenSV) {
+        this.tenSV = tenSV;
     }
 }

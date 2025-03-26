@@ -50,6 +50,7 @@ public class SinhVienController {
                     diem.getMaDiem(),
                     sinhVien.getMaSV(),
                     monHoc.getMaMH(),
+                    sinhVien.getTenSV(),
                     giangVien != null ? giangVien.getTenGV() : "Chưa có",
                     monHoc.getTenMH(),
                     monHoc.getSoTinChi(),
