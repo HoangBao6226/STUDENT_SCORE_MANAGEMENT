@@ -26,5 +26,7 @@ public interface DiemRepository extends JpaRepository<DiemEntity, Integer> {
     List<DiemEntity> getDiemDetailsByMaSV(@Param("maSV") Integer maSV);
     List<DiemEntity> findByMaSV(SinhVienEntity maSV);
 
-    Optional<DiemEntity> findByMaSVAndMaMH(SinhVienEntity maSV, MonHocEntity maMH);
+    List<DiemEntity> findByMaSVAndMaMH(SinhVienEntity maSV, MonHocEntity maMH);
+
+
 }

@@ -12,8 +12,11 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 //@Service
@@ -70,23 +73,47 @@ public class DiemService {
     }
 
     // Xóa môn học (chỉ xóa nếu chưa có điểm)
-    public void xoaMonHoc(Integer maSV, Integer maMH) {
+    public Map<String, Object> xoaNhieuMonHoc(Integer maSV, List<Integer> maMHList) {
+        Map<String, Object> response = new HashMap<>();
+        List<Integer> danhSachDaXoa = new ArrayList<>();
+        List<Integer> danhSachKhongTheXoa = new ArrayList<>();
+
         SinhVienEntity sv = sinhVienRepository.findById(maSV)
                 .orElseThrow(() -> new RuntimeException("Sinh viên không tồn tại!"));
 
-        MonHocEntity mh = monHocRepository.findById(maMH)
-                .orElseThrow(() -> new RuntimeException("Môn học không tồn tại!"));
+        for (Integer maMH : maMHList) {
+            MonHocEntity mh = monHocRepository.findById(maMH)
+                    .orElseThrow(() -> new RuntimeException("Môn học không tồn tại!"));
 
-        // Tìm điểm dựa trên sinh viên và môn học
-        DiemEntity diem = diemRepository.findByMaSVAndMaMH(sv, mh)
-                .orElseThrow(() -> new RuntimeException("Sinh viên chưa đăng ký môn học này!"));
+            // Tìm tất cả bản ghi điểm của sinh viên với môn học
+            List<DiemEntity> diemList = diemRepository.findByMaSVAndMaMH(sv, mh);
 
-        if (diem.getDiem() != null) {
-            throw new RuntimeException("Không thể xóa môn học đã có điểm!");
+            if (diemList.isEmpty()) {
+                danhSachKhongTheXoa.add(maMH);
+                continue; // Bỏ qua môn này và xử lý môn tiếp theo
+            }
+
+            // Lọc ra danh sách điểm chưa có giá trị
+            List<DiemEntity> diemChuaCoDiem = diemList.stream()
+                    .filter(diem -> diem.getDiem() == null)
+                    .collect(Collectors.toList());
+
+            if (diemChuaCoDiem.isEmpty()) {
+                danhSachKhongTheXoa.add(maMH);
+            } else {
+                diemRepository.deleteAll(diemChuaCoDiem);
+                danhSachDaXoa.add(maMH);
+            }
         }
 
-        diemRepository.delete(diem);
+        response.put("message", "Hủy đăng ký môn học hoàn tất!");
+        response.put("daXoa", danhSachDaXoa);
+        response.put("khongTheXoa", danhSachKhongTheXoa);
+
+        return response;
     }
+
+
     //Admin
     public List<DiemDTO> getAllDiem() {
         List<DiemEntity> diemEntities = diemRepository.findAll();
@@ -161,5 +188,21 @@ public class DiemService {
                 diemEntity.getDiem()
         );
     }
+    // Phương thức lấy chi tiết điểm của sinh viên
+    public List<DiemDTO> getDiemBySinhVienID(Integer maSV) {
+        // Kiểm tra sự tồn tại của sinh viên
+        SinhVienEntity sinhVien = sinhVienRepository.findById(maSV)
+                .orElseThrow(() -> new RuntimeException("Sinh viên không tồn tại!"));
 
+        // Lấy danh sách điểm và chuyển đổi sang DTO
+        List<DiemEntity> danhSachDiem = diemRepository.findByMaSV(sinhVien);
+
+        // Log thông tin để debug
+        logger.info("Lấy danh sách điểm cho sinh viên {}: {} môn học", maSV, danhSachDiem.size());
+
+        // Chuyển đổi sang DTO để trả về thông tin chi tiết
+        return danhSachDiem.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }
