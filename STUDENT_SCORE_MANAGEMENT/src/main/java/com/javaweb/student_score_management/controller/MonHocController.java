@@ -25,29 +25,29 @@ public class MonHocController {
     @Autowired
     private MonHocService monHocService;
     //Admin
-    @GetMapping("/admin/monhoc")
+    @GetMapping("/admin/monhoc")//lâấy danh sách môn học
     public List<MonHocDTO> getAllMonHoc() {
         return monHocService.getAllMonHoc();
     }
 
-    @GetMapping("/admin/monhoc/{id}")
+    @GetMapping("/admin/monhoc/{id}") //Lấy môn học theo id
     public MonHocDTO getMonHocById(@PathVariable Integer id) {
         return monHocService.getMonHocById(id);
     }
 
-    @PostMapping("/admin/monhoc")
-    public boolean createMonHoc(@RequestBody MonHocDTO monHocDTO) {
-        return monHocService.createMonHoc(monHocDTO);
+    @PostMapping("/admin/monhoc") // Thêm môn học
+    public void createMonHoc(@RequestBody MonHocDTO monHocDTO) {
+        monHocService.createMonHoc(monHocDTO);
     }
 
     @PutMapping("/admin/monhoc/{id}")
-    public boolean updateMonHoc(@PathVariable Integer id, @RequestBody MonHocDTO monHocDTO) {
-        return monHocService.updateMonHoc(id, monHocDTO);
+    public void updateMonHoc(@PathVariable Integer id, @RequestBody MonHocDTO monHocDTO) {
+        monHocService.updateMonHoc(id, monHocDTO);
     }
 
     @DeleteMapping("/admin/monhoc/{id}")
-    public boolean deleteMonHoc(@PathVariable Integer id) {
-        return monHocService.deleteMonHoc(id);
+    public void deleteMonHoc(@PathVariable Integer id) {
+        monHocService.deleteMonHoc(id);
     }
 
     //SV
