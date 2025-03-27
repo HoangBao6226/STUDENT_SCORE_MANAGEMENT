@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ import java.util.List;
 //        }
 //    }
 //}
-@RestController
+@Controller
 @RequestMapping
 public class DiemController {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(DiemController.class);
@@ -52,15 +53,40 @@ public class DiemController {
 
 
     //Admin
-
-
+// Hiển thị danh sách điểm (View)
     @GetMapping("/admin/diem")
-    public ResponseEntity<List<DiemDTO>> getAllDiem() {
+    public String listDiem(Model model) {
         List<DiemDTO> diemList = diemService.getAllDiem();
-        return ResponseEntity.ok(diemList);
+        model.addAttribute("diemList", diemList);
+        return "admin/diem/index"; // Trả về template index.html
     }
 
-    @PostMapping("/admin/diem")
+    // API lấy danh sách điểm (JSON)
+    @GetMapping("/api/diem")
+    @ResponseBody
+    public ResponseEntity<List<DiemDTO>> getAllDiem() {
+        return ResponseEntity.ok(diemService.getAllDiem());
+    }
+
+
+
+    @DeleteMapping("/admin/diem/{id}")
+    public ResponseEntity<String> deleteDiem(@PathVariable Integer id) {
+        logger.info("Xóa điểm ID: {}", id);
+        boolean deleted = diemService.deleteDiem(id);
+        if (deleted) {
+            return ResponseEntity.ok("Xóa điểm thành công!");
+        } else {
+            return ResponseEntity.badRequest().body("Không tìm thấy điểm!");
+        }
+    }
+
+
+
+    //Giảng viên
+
+
+    @PostMapping("/giangvien/diem")
     public ResponseEntity<String> addDiem(@RequestBody DiemDTO diemDTO) {
         logger.info("Dữ liệu điểm nhận được: {}", diemDTO);
         boolean created = diemService.createDiem(diemDTO);
@@ -71,7 +97,7 @@ public class DiemController {
         }
     }
 
-    @PutMapping("/admin/diem/{id}")
+    @PutMapping("/giangvien/diem/{id}")
     public ResponseEntity<String> updateDiem(@PathVariable Integer id, @RequestBody DiemDTO diemDTO) {
         logger.info("Cập nhật điểm ID {} với dữ liệu: {}", id, diemDTO);
         boolean updated = diemService.updateDiem(id, diemDTO);
@@ -79,17 +105,6 @@ public class DiemController {
             return ResponseEntity.ok("Cập nhật điểm thành công!");
         } else {
             return ResponseEntity.badRequest().body("Cập nhật điểm thất bại!");
-        }
-    }
-
-    @DeleteMapping("/admin/diem/{id}")
-    public ResponseEntity<String> deleteDiem(@PathVariable Integer id) {
-        logger.info("Xóa điểm ID: {}", id);
-        boolean deleted = diemService.deleteDiem(id);
-        if (deleted) {
-            return ResponseEntity.ok("Xóa điểm thành công!");
-        } else {
-            return ResponseEntity.badRequest().body("Không tìm thấy điểm!");
         }
     }
 }

@@ -1,10 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <!-- Header -->
+    <header th:replace="admin/layout/header :: header"></header>
+
+    <!-- Sidebar -->
+    <div th:replace="admin/layout/sidebar :: sidebar"></div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Sửa Tài Khoản Người Dùng</h1>
+            <ol class="breadcrumb">
+                <li><a href="/admin"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a th:href="@{/admin/index/listTaiKhoan}">Quản Lý Môn Học</a></li>
+                <li class="active">Sửa Tài Khoản</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thông Tin Tài Khoản</h3>
+                </div>
+
+                <form id="editForm">
+                    <div class="box-body">
+                        <input type="hidden" id="maTK" th:value="${dstk.maTK}" />
+
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" class="form-control" id="username"
+                                   th:value="${dstk.username}"
+                                   th:disabled="${dstk.role.name() == 'Admin'}" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" id="password"
+                                   th:value="${dstk.password}"
+                                   th:disabled="${dstk.role.name() == 'Admin'}" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Vai Trò</label>
+                            <select class="form-control" id="role"
+                                    th:disabled="${dstk.role.name() == 'Admin'}">
+                                <option value="Admin" th:selected="${dstk.role.name() == 'Admin'}">Admin</option>
+                                <option value="GiangVien" th:selected="${dstk.role.name() == 'GiangVien'}">Giảng Viên</option>
+                                <option value="SinhVien" th:selected="${dstk.role.name() == 'SinhVien'}">Sinh Viên</option>
+                            </select>
+                        </div>
+
+                        <div class="alert alert-warning" th:if="${dstk.role.name() == 'Admin'}">
+                            <strong>Chú ý:</strong> Tài khoản <strong>Admin</strong> không được phép chỉnh sửa.
+                        </div>
+                    </div>
+
+                    <div class="box-footer">
+                        <button type="button" class="btn btn-primary"
+                                th:if="${dstk.role.name() != 'Admin'}"
+                                onclick="submitEditForm()">Lưu Thay Đổi</button>
+                        <a th:href="@{/admin/index/listTaiKhoan}" class="btn btn-default">Quay lại</a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="admin/layout/footer :: footer"></div>
+</div>
+
+<!-- Scripts -->
+<div th:replace="admin/layout/scripts :: scripts"></div>
+
+<!-- ✅ Gọi file JS đã tách riêng -->
 
 </body>
 </html>

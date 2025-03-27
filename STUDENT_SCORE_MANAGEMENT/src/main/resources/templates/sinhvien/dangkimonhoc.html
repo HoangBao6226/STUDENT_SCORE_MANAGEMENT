@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head th:replace="sinhvien/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <header th:replace="sinhvien/layout/header :: header"></header>
+    <div th:replace="sinhvien/layout/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Đăng Ký Môn Học</h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/sinhvien/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Đăng Ký Môn Học</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <!-- Thông báo lỗi -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="box" th:unless="${error}">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Đăng Ký Môn Học</h3>
+                </div>
+                <div class="box-body">
+                    <p>Chức năng đăng ký môn học sẽ được triển khai sau.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="sinhvien/layout/footer :: footer"></div>
+</div>
+
+<div th:replace="sinhvien/layout/scripts :: scripts"></div>
+</body>
+</html>

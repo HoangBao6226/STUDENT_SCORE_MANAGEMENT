@@ -27,36 +27,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        //bỏ qua đăng nhập để test
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> {
-                    try {
-                        authorize
-                                .requestMatchers("/**").permitAll() // 🔥 Bỏ qua xác thực cho tất cả request
-                                .anyRequest().permitAll();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                })
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(authorize -> {
-//                    try {
-//                        authorize
-//                                .requestMatchers("/sinhvien/bangdiem").permitAll()
-//                                .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-//                                .requestMatchers("/admin/index").hasAuthority("Admin")
-//                                .requestMatchers("/giangvien/index").hasAuthority("GiangVien")
-//                                .requestMatchers("/sinhvien/index").hasAuthority("SinhVien")
-//                                .anyRequest().authenticated();
-//
-////                        System.out.println("DEBUG: Cấu hình bảo mật đã tải thành công!");
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                })
+                .authorizeHttpRequests(authorize -> authorize
+                        // Cho phép tất cả trong giai đoạn test
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().permitAll()
+                )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(customSuccessHandler)
