@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head th:replace="giangvien/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <header th:replace="giangvien/layout/header :: header"></header>
+  <div th:replace="giangvien/layout/sidebar :: sidebar"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Quản Lý Sinh Viên</h1>
+      <ol class="breadcrumb">
+        <li><a th:href="@{/giangvien/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a th:href="@{/giangvien/monhoc}">Danh Sách Môn Học</a></li>
+        <li class="active">Quản Lý Sinh Viên</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <!-- Hidden inputs to store maGV and maMH for JavaScript -->
+      <input type="hidden" id="maGV" th:value="${maGV}">
+      <input type="hidden" id="maMH" th:value="${maMH}">
+
+      <!-- Thông báo lỗi -->
+      <div th:if="${error}" class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p th:text="${error}"></p>
+      </div>
+
+      <!-- Thông báo thành công -->
+      <div th:if="${success}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p th:text="${success}"></p>
+      </div>
+
+      <!-- Form thêm sinh viên -->
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Thêm Sinh Viên</h3>
+        </div>
+        <div class="box-body">
+          <form th:action="@{/giangvien/monhoc/{maGV}/{maMH}/add-sinhvien(maGV=${maGV}, maMH=${maMH})}" th:object="${sinhVien}" method="post">
+            <div class="form-group">
+              <label for="maSV">Mã Sinh Viên:</label>
+              <input type="number" class="form-control" id="maSV" th:field="*{maSV}" required>
+            </div>
+            <div class="form-group">
+              <label for="tenSV">Tên Sinh Viên:</label>
+              <input type="text" class="form-control" id="tenSV" th:field="*{tenSV}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Thêm Sinh Viên</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Danh sách sinh viên -->
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Danh Sách Sinh Viên</h3>
+        </div>
+        <div class="box-body">
+          <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+            <thead>
+            <tr>
+              <th style="width: 15%;">Mã SV</th>
+              <th style="width: 20%;">Tên SV</th>
+              <th style="width: 20%;">Tên GV</th>
+              <th style="width: 15%;">Mã MH</th>
+              <th style="width: 30%;">Tùy Chọn</th>
+            </tr>
+            </thead>
+            <tbody id="sinhVienTableBody">
+            <!-- Table body will be populated dynamically by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div th:replace="giangvien/layout/footer :: footer"></div>
+</div>
+
+<div th:replace="giangvien/layout/scripts :: scripts"></div>
+<!-- Include the custom JavaScript file -->
+<script th:src="@{/js/sinhvien.js}"></script>
+</body>
+</html>

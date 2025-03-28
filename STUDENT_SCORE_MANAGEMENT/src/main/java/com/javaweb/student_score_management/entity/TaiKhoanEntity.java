@@ -18,8 +18,6 @@ public class TaiKhoanEntity {
     @Column(name = "username")
     private String username;
 
-
-
     @Column(name = "password")
     private String password;
 
@@ -60,8 +58,6 @@ public class TaiKhoanEntity {
     public void setUsername(String username) {
         this.username = username;
     }
-
-
 
     public String getPassword() {
         return password;

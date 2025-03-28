@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head th:replace="giangvien/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <header th:replace="giangvien/layout/header :: header"></header>
+  <div th:replace="giangvien/layout/sidebar :: sidebar"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Trang Giảng Viên</h1>
+      <ol class="breadcrumb">
+        <li><a th:href="@{/giangvien/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Thông Tin Giảng Viên</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <!-- Thông báo -->
+      <div th:if="${message}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p th:text="${message}"></p>
+      </div>
+      <div th:if="${error}" class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p th:text="${error}"></p>
+      </div>
+
+      <!-- Thông tin tài khoản -->
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Thông Tin Tài Khoản</h3>
+        </div>
+        <div class="box-body">
+          <p><strong>Mã Tài Khoản:</strong> <span sec:authentication="principal.maTK" id="maTK"></span></p>
+          <p><strong>Username:</strong> <span sec:authentication="principal.username"></span></p>
+          <p><strong>Vai Trò:</strong> <span sec:authentication="principal.role"></span></p>
+          <!-- Thông tin giảng viên nếu có -->
+          <p><strong>Mã GV:</strong> <span sec:authentication="principal.maGV" id="maGV"></span></p>
+          <p th:if="${#authentication.getPrincipal().maGV != null}">
+            <strong>Tên GV:</strong> <span sec:authentication="principal.tenGV" id="tenGV"></span>
+          </p>
+          <p th:if="${#authentication.getPrincipal().maGV != null}">
+            <strong>Email:</strong> <span sec:authentication="principal.email" id="email"></span>
+          </p>
+          <!-- Nút cập nhật thông tin -->
+          <div th:if="${#authentication.getPrincipal().maGV != null}" class="box-footer">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Cập nhật thông tin</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal cập nhật thông tin -->
+  <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Cập nhật thông tin giảng viên</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <form id="updateForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="tenGVInput">Tên GV</label>
+              <input type="text" class="form-control" id="tenGVInput" name="tenGV" th:value="${#authentication.getPrincipal().tenGV}">
+            </div>
+            <div class="form-group">
+              <label for="emailInput">Email</label>
+              <input type="email" class="form-control" id="emailInput" name="email" th:value="${#authentication.getPrincipal().email}">
+            </div>
+            <input type="hidden" id="maGVInput" name="maGV" th:value="${#authentication.getPrincipal().maGV}">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="giangvien/layout/footer :: footer"></div>
+</div>
+
+<div th:replace="giangvien/layout/scripts :: scripts"></div>
+<script th:src="@{/js/giangVien.js}"></script>
+
+</body>
+</html>

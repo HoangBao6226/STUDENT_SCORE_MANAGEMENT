@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+    <header th:replace="admin/layout/header :: header"></header>
+    <div th:replace="admin/layout/sidebar :: sidebar"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Danh Sách Môn Học</h1>
+            <br>
+            <div>
+                <a th:href="@{/admin/monhoc/add}" class="btn btn-success">Thêm Môn Học</a>
+            </div>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/admin/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Quản Lý Môn Học</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh Sách Môn Học</h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%;">Mã MH</th>
+                            <th style="width: 30%;">Tên MH</th>
+                            <th style="width: 20%;">Số Tín Chỉ</th>
+                            <th style="width: 20%;">Mã GV</th>
+                            <th style="width: 20%;">Tùy Chọn</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="monHoc : ${list}">
+                            <td th:text="${monHoc.maMH}"></td>
+                            <td th:text="${monHoc.tenMH}"></td>
+                            <td th:text="${monHoc.soTinChi}"></td>
+                            <td th:text="${monHoc.maGV}"></td>
+                            <td>
+                                <a th:href="@{/admin/monhoc/edit/{id}(id=${monHoc.maMH})}"
+                                   class="btn btn-success btn-sm">Edit</a>
+                                <button class="btn btn-danger btn-sm"
+                                        th:onclick="'deleteMonHoc(' + ${monHoc.maMH} + ')'">Delete</button>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(list)}">
+                            <td colspan="5" style="text-align: center;">Không có môn học nào</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="admin/layout/footer :: footer"></div>
+</div>
+
+<div th:replace="admin/layout/scripts :: scripts"></div>
+
+<script>
+    function deleteMonHoc(id) {
+        if (confirm('Bạn có chắc chắn muốn xóa môn học này?')) {
+            fetch('/api/monhoc/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Xóa thất bại');
+                })
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Tải lại trang để cập nhật danh sách
+                })
+                .catch(error => {
+                    alert('Lỗi: ' + error.message);
+                });
+        }
+    }
+</script>
+</body>
+</html>
