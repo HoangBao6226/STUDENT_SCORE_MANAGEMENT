@@ -50,10 +50,6 @@ public class DiemController {
         return "bangdiem";
     }
 
-
-
-    //Admin
-// Hiển thị danh sách điểm (View)
     @GetMapping("/admin/diem")
     public String listDiem(Model model) {
         List<DiemDTO> diemList = diemService.getAllDiem();
@@ -107,4 +103,5 @@ public class DiemController {
             return ResponseEntity.badRequest().body("Cập nhật điểm thất bại!");
         }
     }
+
 }

@@ -34,27 +34,27 @@ public class AdminController {
         return "admin/index";
     }
 
-    // Hiển thị danh sách tài khoản (dùng View)
-    @GetMapping("/index/listTaiKhoan")
-    public String listAccounts(Model model) {
-        List<TaiKhoanEntity> list = taiKhoanService.getAllTaiKhoan();
-        model.addAttribute("list", list);
-        return "admin/index/listTaiKhoan/index";
-    }
+    // Hiển thị danh sách tài khoản (dùng View) trả về 1 trang html
+//    @GetMapping("/index/listTaiKhoan")
+//    public String listAccounts(Model model) {
+//        List<TaiKhoanEntity> list = taiKhoanService.getAllTaiKhoan();
+//        model.addAttribute("list", list);
+//        return "admin/index/listTaiKhoan/index";
+//    }
 
-    // API lấy danh sách tài khoản (JSON)
+    // API lấy danh sách tài khoản (JSON) trả về JSON
     @GetMapping("/api/listTaiKhoan")
     @ResponseBody
     public List<TaiKhoanEntity> getListTaiKhoan() {
         return taiKhoanService.getAllTaiKhoan();
     }
 
-    // Form thêm tài khoản (View)
-    @GetMapping("/addTaiKhoan")
-    public String showAddForm(Model model) {
-        model.addAttribute("dstk", new TaiKhoanEntity());
-        return "admin/index/listTaiKhoan/add-TaiKhoan";
-    }
+    // Form thêm tài khoản (View) trả về 1 trang html
+//    @GetMapping("/addTaiKhoan")
+//    public String showAddForm(Model model) {
+//        model.addAttribute("dstk", new TaiKhoanEntity());
+//        return "admin/index/listTaiKhoan/add-TaiKhoan";
+//    }
 
     // API thêm tài khoản (JSON)
     @PostMapping("/addTaiKhoan")
@@ -78,16 +78,16 @@ public class AdminController {
     }
 
 
-    // Form chỉnh sửa tài khoản (View)
-    @GetMapping("/editTaiKhoan/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model) {
-        TaiKhoanEntity taiKhoan = taiKhoanService.findById(id);
-        if (taiKhoan == null) {
-            throw new IllegalArgumentException("Invalid account ID: " + id);
-        }
-        model.addAttribute("dstk", taiKhoan);
-        return "admin/index/listTaiKhoan/edit-TaiKhoan";
-    }
+    // Form chỉnh sửa tài khoản (View) trả về html
+//    @GetMapping("/editTaiKhoan/{id}")
+//    public String showEditForm(@PathVariable Integer id, Model model) {
+//        TaiKhoanEntity taiKhoan = taiKhoanService.findById(id);
+//        if (taiKhoan == null) {
+//            throw new IllegalArgumentException("Invalid account ID: " + id);
+//        }
+//        model.addAttribute("dstk", taiKhoan);
+//        return "admin/index/listTaiKhoan/edit-TaiKhoan";
+//    }
 
     // API cập nhật tài khoản (JSON)
     @PutMapping("/editTaiKhoan/{id}")

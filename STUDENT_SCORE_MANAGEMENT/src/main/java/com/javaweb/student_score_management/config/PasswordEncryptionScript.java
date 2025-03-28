@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 public class PasswordEncryptionScript {
     public static void main(String[] args) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         try {
             // Kết nối với cơ sở dữ liệu
             String url = "jdbc:mysql://localhost:3306/student_score";

@@ -33,6 +33,11 @@ public class MonHocService {
             MonHocEntity monHoc = new MonHocEntity();
             monHoc.setTenMH(monHocDTO.getTenMH());
             monHoc.setSoTinChi(monHocDTO.getSoTinChi());
+            if (monHocDTO.getMaGV() != null) {
+                GiangVienEntity giangVien = giangVienRepository.findById(monHocDTO.getMaGV())
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên với ID: " + monHocDTO.getMaGV()));
+                monHoc.setMaGV(giangVien);
+            }
             monHocRepository.save(monHoc);
             return true;
         } catch (Exception e) {
@@ -44,6 +49,11 @@ public class MonHocService {
         return monHocRepository.findById(id).map(monHoc -> {
             monHoc.setTenMH(monHocDTO.getTenMH());
             monHoc.setSoTinChi(monHocDTO.getSoTinChi());
+            if (monHocDTO.getMaGV() != null) {
+                GiangVienEntity giangVien = giangVienRepository.findById(monHocDTO.getMaGV())
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên với ID: " + monHocDTO.getMaGV()));
+                monHoc.setMaGV(giangVien);
+            }
             monHocRepository.save(monHoc);
             return true;
         }).orElse(false);
