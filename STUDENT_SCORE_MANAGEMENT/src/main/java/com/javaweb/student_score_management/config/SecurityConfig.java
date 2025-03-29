@@ -30,9 +30,18 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        // Cho phép tất cả trong giai đoạn test
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().permitAll()
+                        // Cho phép truy cập công khai vào các tài nguyên tĩnh và trang login
+                        .requestMatchers("/login", "/logout", "/css/**", "/js/**", "/images/**", "/vendor/**").permitAll()
+                        // Chỉ Admin được truy cập các endpoint /admin/**
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Chỉ GiangVien được truy cập các endpoint /giangvien/**
+                        .requestMatchers("/giangvien/**").hasRole("GIANGVIEN")
+                        // Chỉ SinhVien được truy cập các endpoint /sinhvien/**
+                        .requestMatchers("/sinhvien/**").hasRole("SINHVIEN")
+                        // Các API công khai (nếu cần, ví dụ: /api/monhoc)
+                        .requestMatchers("/api/monhoc", "/api/monhoc/**").permitAll()
+                        // Tất cả các yêu cầu khác phải được xác thực
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -41,8 +50,11 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
+                        .permitAll()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                );
 
         return http.build();
     }

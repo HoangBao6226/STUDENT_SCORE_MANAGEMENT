@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,12 +37,12 @@ public class AdminController {
     }
 
     // Hiển thị danh sách tài khoản (dùng View) trả về 1 trang html
-//    @GetMapping("/index/listTaiKhoan")
-//    public String listAccounts(Model model) {
-//        List<TaiKhoanEntity> list = taiKhoanService.getAllTaiKhoan();
-//        model.addAttribute("list", list);
-//        return "admin/index/listTaiKhoan/index";
-//    }
+    @GetMapping("/index/listTaiKhoan")
+    public String listAccounts(Model model) {
+        List<TaiKhoanEntity> list = taiKhoanService.getAllTaiKhoan();
+        model.addAttribute("list", list);
+        return "admin/index/listTaiKhoan/index";
+    }
 
     // API lấy danh sách tài khoản (JSON) trả về JSON
     @GetMapping("/api/listTaiKhoan")
@@ -50,44 +52,49 @@ public class AdminController {
     }
 
     // Form thêm tài khoản (View) trả về 1 trang html
-//    @GetMapping("/addTaiKhoan")
-//    public String showAddForm(Model model) {
-//        model.addAttribute("dstk", new TaiKhoanEntity());
-//        return "admin/index/listTaiKhoan/add-TaiKhoan";
-//    }
+    @GetMapping("/addTaiKhoan")
+    public String showAddForm(Model model) {
+        model.addAttribute("dstk", new TaiKhoanEntity());
+        return "admin/index/listTaiKhoan/add-TaiKhoan";
+    }
 
     // API thêm tài khoản (JSON)
     @PostMapping("/addTaiKhoan")
-    public ResponseEntity<String> addAccount(@RequestBody TaiKhoanDTO taiKhoan) {
+    public ResponseEntity<Map<String, String>> addAccount(@RequestBody TaiKhoanDTO taiKhoan) {
         logger.info("Dữ liệu nhận được: {}", taiKhoan);
 
-        if (taiKhoan.getUsername() == null || taiKhoan.getUsername().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"message\": \"Username ko de trong\"}");
+        Map<String, String> response = new HashMap<>();
+
+        if (taiKhoan.getUsername() == null || taiKhoan.getUsername().trim().isEmpty()) {
+            response.put("message", "Username không được để trống");
+            return ResponseEntity.badRequest().body(response);
         }
 
-        if (taiKhoan.getPassword() == null || taiKhoan.getPassword().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"message\": \"Password ko de trong\"}");
+        if (taiKhoan.getPassword() == null || taiKhoan.getPassword().trim().isEmpty()) {
+            response.put("message", "Password không được để trống");
+            return ResponseEntity.badRequest().body(response);
         }
 
         boolean created = taiKhoanService.create(taiKhoan);
         if (created) {
-            return ResponseEntity.ok("{\"message\": \"Tạo tài khoản thành công!\"}");
+            response.put("message", "Tạo tài khoản thành công!");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.badRequest().body("{\"message\": \"Tạo tài khoản thất bại!\"}");
+            response.put("message", "Tạo tài khoản thất bại!");
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
-
     // Form chỉnh sửa tài khoản (View) trả về html
-//    @GetMapping("/editTaiKhoan/{id}")
-//    public String showEditForm(@PathVariable Integer id, Model model) {
-//        TaiKhoanEntity taiKhoan = taiKhoanService.findById(id);
-//        if (taiKhoan == null) {
-//            throw new IllegalArgumentException("Invalid account ID: " + id);
-//        }
-//        model.addAttribute("dstk", taiKhoan);
-//        return "admin/index/listTaiKhoan/edit-TaiKhoan";
-//    }
+    @GetMapping("/editTaiKhoan/{id}")
+    public String showEditForm(@PathVariable Integer id, Model model) {
+        TaiKhoanEntity taiKhoan = taiKhoanService.findById(id);
+        if (taiKhoan == null) {
+            throw new IllegalArgumentException("Invalid account ID: " + id);
+        }
+        model.addAttribute("dstk", taiKhoan);
+        return "admin/index/listTaiKhoan/edit-TaiKhoan";
+    }
 
     // API cập nhật tài khoản (JSON)
     @PutMapping("/editTaiKhoan/{id}")

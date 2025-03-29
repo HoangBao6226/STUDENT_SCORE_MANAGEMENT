@@ -23,7 +23,9 @@ public class MonHocService {
     public List<MonHocDTO> getAllMonHoc() {
         return monHocRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
-
+    public boolean existsByTenMH(String tenMH) {
+        return monHocRepository.existsByTenMH(tenMH);
+    }
     public MonHocDTO getMonHocById(Integer id) {
         return monHocRepository.findById(id).map(this::convertToDTO).orElse(null);
     }

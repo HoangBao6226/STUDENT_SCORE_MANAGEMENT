@@ -12,6 +12,11 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+-- select * from taikhoan;
+-- select * from monhoc;
+-- select * from giangvien;
+-- select * from diem;
+-- select * from sinhvien;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -58,26 +63,30 @@ CREATE TABLE IF NOT EXISTS `diem` (
     PRIMARY KEY (`maDiem`),
     KEY `MaSV` (`maSV`),
     KEY `MaMH` (`maMH`)
-    ) ;
+    ) ENGINE=InnoDB  ;
 
 --
 -- Đang đổ dữ liệu cho bảng `diem`
 --
 
--- INSERT INTO `diem` (`maDiem`, `maSV`, `maMH`, `diem`) VALUES
--- (1, 1, 1, 7.50),
--- (2, 1, 2, 8.00),
--- (3, 1, 3, 6.50),
--- (4, 2, 1, 9.00),
--- (5, 2, 4, 7.00),
--- (6, 3, 2, 8.50),
--- (7, 3, 5, 6.00),
--- (8, 4, 3, 7.80),
--- (9, 4, 6, 9.20),
--- (10, 5, 2, 5.50),
--- (11, 5, 4, 8.30),
--- (12, 5, 7, 7.00);
+-- INSERT INTO `diem` (`maSV`, `maMH`, `diem`) VALUES
+-- (1, 1, 7.50),
+-- (1, 2, 8.00),
+-- (1, 3, 6.50),
+-- (2, 1, 9.00),
+-- (2, 4, 7.00),
+-- (3, 2, 8.50),
+-- (3, 5, 6.00),
+-- (4, 3, 7.80),
+-- (4, 6, 9.20),
+-- (5, 2, 5.50),
+-- (5, 4, 8.30),
+-- (6, 7, 7.00);
 
+-- INSERT INTO `diem` (`maSV`, `maMH`, `diem`) VALUES
+-- (6, 8, 10);
+-- INSERT INTO `diem` (`maSV`, `maMH`, `diem`) VALUES
+-- (7, 8, 5);
 -- --------------------------------------------------------
 
 --
@@ -112,8 +121,7 @@ CREATE TABLE IF NOT EXISTS `monhoc` (
                                         `TenMH` varchar(100) NOT NULL,
     `SoTinChi` int NOT NULL,
     `MaGV` int DEFAULT NULL,
-    PRIMARY KEY (`MaMH`),
-    KEY `MaGV` (`MaGV`)
+    PRIMARY KEY (`MaMH`)
     ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -149,12 +157,12 @@ CREATE TABLE IF NOT EXISTS `sinhvien` (
 -- Đang đổ dữ liệu cho bảng `sinhvien`
 --
 
--- INSERT INTO `sinhvien` (`MaSV`, `TenSV`, `Email`) VALUES
+-- INSERT INTO `sinhvien` (`TenSV`, `Email`) VALUES
 -- (1, 'Phạm Minh Anh', 'dh52110568@student.stu.edu.vn'),
 -- (2, 'Nguyễn Thành Công', 'dh52110649@student.stu.edu.vn'),
 -- (3, 'Huy Nguyễn', 'dh52107926@student.stu.edu.vn'),
 -- (4, 'Châu Hà', 'dh52110640@student.stu.edu.vn'),
--- (5, 'Bảo Nguyễn', 'dh52110602@student.stu.edu.vn');
+-- ('Bảo Nguyễn', 'dh52110602@student.stu.edu.vn');
 
 -- --------------------------------------------------------
 
@@ -176,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `taikhoan` (
     KEY `MaAdmin` (`MaAdmin`),
     KEY `MaGV` (`MaGV`),
     KEY `MaSV` (`MaSV`)
-    ) ;
+    ) ENGINE=InnoDB ;
 
 --
 -- Đang đổ dữ liệu cho bảng `taikhoan`

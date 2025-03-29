@@ -97,7 +97,9 @@ public class MonHocController {
         if (monHocDTO.getMaGV() == null) {
             return ResponseEntity.badRequest().body("{\"message\": \"Mã giảng viên không được để trống\"}");
         }
-
+        if (monHocService.existsByTenMH(monHocDTO.getTenMH())) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Tên môn học đã tồn tại!\"}");
+        }
         boolean created = monHocService.createMonHoc(monHocDTO);
         if (created) {
             return ResponseEntity.ok("{\"message\": \"Tạo môn học thành công!\"}");
