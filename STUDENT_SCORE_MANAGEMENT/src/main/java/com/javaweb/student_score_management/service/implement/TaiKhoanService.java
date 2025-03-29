@@ -35,8 +35,7 @@ public class TaiKhoanService {
     @Autowired
     private SinhVienRepository sinhVienRepository;
 
-    @Autowired
-    private MonHocRepository monHocRepository;
+    
 
     @Autowired
     private TaiKhoanRepository taiKhoanRepository;
