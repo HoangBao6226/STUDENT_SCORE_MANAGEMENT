@@ -58,6 +58,13 @@ public class TaiKhoanService {
                 giangVienRepository.save(giangVienEntity);
                 taiKhoanEntity.setMaGV(giangVienRepository.findById(giangVienEntity.getMaGV()).get());
                 taiKhoanEntity.setRole(TaiKhoanEntity.Role.GiangVien);
+                taiKhoanEntity.setUsername(taiKhoan.getUsername());
+                taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+//            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+                taiKhoanRepository.save(taiKhoanEntity);
+
+                logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
+                return true;
             } else{
                 taiKhoanEntity.setRole(TaiKhoanEntity.Role.SinhVien);
                 SinhVienEntity sinhVienEntity = new SinhVienEntity();
@@ -65,16 +72,23 @@ public class TaiKhoanService {
                 sinhVienEntity.setTenSV(taiKhoan.getName());
                 sinhVienRepository.save(sinhVienEntity);
                 taiKhoanEntity.setMaSV(sinhVienRepository.findById(sinhVienEntity.getMaSV()).get());
+                taiKhoanEntity.setUsername(taiKhoan.getUsername());
+                taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+//            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+                taiKhoanRepository.save(taiKhoanEntity);
+
+                logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
+                return true;
             }
 
 
-            taiKhoanEntity.setUsername(taiKhoan.getUsername());
-            taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-//            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-            taiKhoanRepository.save(taiKhoanEntity);
-
-            logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
-            return true;
+//            taiKhoanEntity.setUsername(taiKhoan.getUsername());
+//            taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+////            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+//            taiKhoanRepository.save(taiKhoanEntity);
+//
+//            logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
+//            return true;
         } catch (Exception e) {
             logger.error("Lỗi khi tạo tài khoản: ", e);
             return false;
