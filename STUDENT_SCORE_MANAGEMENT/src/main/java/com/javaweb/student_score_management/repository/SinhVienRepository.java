@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface SinhVienRepository extends JpaRepository<SinhVienEntity, Integer> {
     List<SinhVienEntity> findAll();
     Optional<SinhVienEntity> findById(Integer maSV);
+    boolean existsByEmail(String email);
 
 }

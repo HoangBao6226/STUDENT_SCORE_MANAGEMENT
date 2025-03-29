@@ -52,6 +52,10 @@ public class TaiKhoanService {
 
             TaiKhoanEntity taiKhoanEntity = new TaiKhoanEntity();
             if (taiKhoan.getAccount_type().equals("GiangVien")) {
+                if (giangVienRepository.existsByEmail(taiKhoan.getEmail())) {
+                    logger.error("Email đã tồn tại trong GiangVien: {}", taiKhoan.getEmail());
+                    return false;
+                }
                 GiangVienEntity giangVienEntity = new GiangVienEntity();
                 giangVienEntity.setEmail(taiKhoan.getEmail());
                 giangVienEntity.setTenGV(taiKhoan.getName());
@@ -66,6 +70,10 @@ public class TaiKhoanService {
                 logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
                 return true;
             } else{
+                if (sinhVienRepository.existsByEmail(taiKhoan.getEmail())) {
+                    logger.error("Email đã tồn tại trong SinhVien: {}", taiKhoan.getEmail());
+                    return false;
+                }
                 taiKhoanEntity.setRole(TaiKhoanEntity.Role.SinhVien);
                 SinhVienEntity sinhVienEntity = new SinhVienEntity();
                 sinhVienEntity.setEmail(taiKhoan.getEmail());

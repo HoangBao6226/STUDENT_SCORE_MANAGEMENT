@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<head th:replace="giangvien/layout/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <header th:replace="giangvien/layout/header :: header"></header>
+  <div th:replace="giangvien/layout/sidebar :: sidebar"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Bảng Điểm</h1>
+      <ol class="breadcrumb">
+        <li><a th:href="@{/giangvien/index}"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a th:href="@{/giangvien/monhoc}">Danh Sách Môn Học</a></li>
+        <li><a th:href="@{/giangvien/monhoc/{maGV}/{maMH}(maGV=${maGV}, maMH=${maMH})}">Quản Lý Sinh Viên</a></li>
+        <li class="active">Bảng Điểm</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <!-- Hidden inputs to store maGV, maMH, and maSV for JavaScript -->
+      <input type="hidden" id="maGV" th:value="${maGV}">
+      <input type="hidden" id="maMH" th:value="${maMH}">
+      <input type="hidden" id="maSV" th:value="${diem != null} ? ${diem.maSV} : ''">
+
+      <!-- Thông báo lỗi -->
+      <div th:if="${error}" class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <p th:text="${error}"></p>
+      </div>
+
+      <!-- Bảng điểm -->
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Bảng Điểm Sinh Viên</h3>
+        </div>
+        <div class="box-body">
+          <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
+            <thead>
+            <tr>
+              <th style="width: 10%;">Mã SV</th>
+              <th style="width: 15%;">Tên SV</th>
+              <th style="width: 10%;">Mã MH</th>
+              <th style="width: 15%;">Tên MH</th>
+              <th style="width: 15%;">Tên GV</th>
+              <th style="width: 10%;">Số Tín Chỉ</th>
+              <th style="width: 10%;">Điểm</th>
+              <th style="width: 15%;">Tùy Chọn</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${diem == null}">
+              <td colspan="8" style="text-align: center;">Không có điểm nào</td>
+            </tr>
+            <tr th:if="${diem != null}">
+              <td th:text="${diem.maSV}"></td>
+              <td th:text="${diem.tenSV}"></td>
+              <td th:text="${diem.maMH}"></td>
+              <td th:text="${diem.tenMH}"></td>
+              <td th:text="${diem.tenGV}"></td>
+              <td th:text="${diem.soTinChi}"></td>
+              <td>
+                <input type="number" step="0.1" min="0" max="10" id="diemInput" th:value="${diem.diem != null} ? ${diem.diem} : ''" placeholder="Chưa có điểm" class="form-control">
+              </td>
+              <td>
+                <button onclick="updateDiem()" class="btn btn-primary btn-sm">Lưu</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div th:replace="giangvien/layout/footer :: footer"></div>
+</div>
+
+<div th:replace="giangvien/layout/scripts :: scripts"></div>
+<!-- Include the custom JavaScript file -->
+<script th:src="@{/js/diem.js}"></script>
+</body>
+</html>

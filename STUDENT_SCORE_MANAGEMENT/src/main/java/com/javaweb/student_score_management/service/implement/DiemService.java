@@ -7,37 +7,17 @@ import com.javaweb.student_score_management.entity.SinhVienEntity;
 import com.javaweb.student_score_management.repository.DiemRepository;
 import com.javaweb.student_score_management.repository.MonHocRepository;
 import com.javaweb.student_score_management.repository.SinhVienRepository;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@Service
-//public class DiemService {
-//    @Autowired
-//    private DiemRepository diemRepository;
-//
-//    @Autowired
-//    private SinhVienRepository sinhVienRepository;
-//
-//    public List<DiemEntity> getDiembySinhVienID(Integer maSV) {
-//        SinhVienEntity sv = sinhVienRepository.findById(maSV).orElse(null);
-//        if (sv == null) {
-//            throw new RuntimeException("Sinh viên không tồn tại!");
-//        }
-//
-//        List<DiemEntity> danhSachDiem = diemRepository.findByMaSV(sv);
-//        System.out.println("Danh sách điểm lấy được: " + danhSachDiem);
-//        return danhSachDiem;
-//    }
-//}
 @Service
 public class DiemService {
     private static final Logger logger = LoggerFactory.getLogger(DiemService.class);
@@ -45,14 +25,15 @@ public class DiemService {
     @Autowired
     private DiemRepository diemRepository;
 
-    public List<DiemEntity> getDiemDetailsBySinhVienID(Integer maSV) {
-        return diemRepository.getDiemDetailsByMaSV(maSV);
-    }
     @Autowired
     private SinhVienRepository sinhVienRepository;
 
     @Autowired
     private MonHocRepository monHocRepository;
+
+    public List<DiemEntity> getDiemDetailsBySinhVienID(Integer maSV) {
+        return diemRepository.getDiemDetailsByMaSV(maSV);
+    }
 
     // Đăng ký môn học mới (luôn thêm bản ghi mới)
     public String dangKyMonHoc(Integer maSV, Integer maMH) {
@@ -113,8 +94,7 @@ public class DiemService {
         return response;
     }
 
-
-    //Admin
+    // Admin
     public List<DiemDTO> getAllDiem() {
         List<DiemEntity> diemEntities = diemRepository.findAll();
         return diemEntities.stream().map(this::convertToDTO).collect(Collectors.toList());
@@ -154,6 +134,25 @@ public class DiemService {
         }
     }
 
+    // Cập nhật điểm dựa trên maSV và maMH
+    public void updateDiem(int maSV, int maMH, Float diem) {
+        SinhVienEntity sinhVien = sinhVienRepository.findById(maSV)
+                .orElseThrow(() -> new RuntimeException("Sinh viên không tồn tại!"));
+
+        MonHocEntity monHoc = monHocRepository.findById(maMH)
+                .orElseThrow(() -> new RuntimeException("Môn học không tồn tại!"));
+
+        List<DiemEntity> diemList = diemRepository.findByMaSVAndMaMH(sinhVien, monHoc);
+        if (diemList.isEmpty()) {
+            throw new RuntimeException("Không tìm thấy điểm cho sinh viên với mã SV: " + maSV + " và mã MH: " + maMH);
+        }
+
+        // Lấy bản ghi đầu tiên (giả định chỉ có một bản ghi cho mỗi sinh viên và môn học)
+        DiemEntity diemEntity = diemList.get(0);
+        diemEntity.setDiem(diem);
+        diemRepository.save(diemEntity);
+    }
+
     public boolean deleteDiem(Integer id) {
         try {
             if (diemRepository.existsById(id)) {
@@ -168,15 +167,7 @@ public class DiemService {
         }
     }
 
-    //FE sẽ hiển thị các trường (Field) thông tin trên VIEW danh sách điểm là:
-    //maDiem → Mã điểm
-    //maSV → Mã sinh viên
-    //maMH → Mã môn học
-    //tenGV → Tên giảng viên
-    //tenMH → Tên môn học
-    //soTinChi → Số tín chỉ
-    //diem → Điểm số
-    //DTO có chức năng là sao chép các trường thông tin bên ENTITY để chỉ hiện những thông tin cần thiết/cho phép để hiển thị
+    // DTO có chức năng là sao chép các trường thông tin bên ENTITY để chỉ hiện những thông tin cần thiết/cho phép để hiển thị
     public DiemDTO convertToDTO(DiemEntity diemEntity) {
         return new DiemDTO(
                 diemEntity.getMaDiem(),
@@ -189,6 +180,7 @@ public class DiemService {
                 diemEntity.getDiem()
         );
     }
+
     // Phương thức lấy chi tiết điểm của sinh viên
     public List<DiemDTO> getDiemBySinhVienID(Integer maSV) {
         // Kiểm tra sự tồn tại của sinh viên
@@ -207,26 +199,45 @@ public class DiemService {
                 .collect(Collectors.toList());
     }
 
-    //Lấy DSSV (Diem) theo MaGV va MaMH
+    // Lấy DSSV (Diem) theo MaGV va MaMH
     public List<DiemDTO> getSV_Diem(int maMH, int maGV) {
-
-        MonHocEntity monHocEntity = monHocRepository.findById(maMH).get();
+        MonHocEntity monHocEntity = monHocRepository.findById(maMH)
+                .orElseThrow(() -> new RuntimeException("Môn học không tồn tại!"));
 
         List<DiemEntity> listD1 = diemRepository.findByMaMH(monHocEntity);
 
         List<DiemDTO> diemDTO = new ArrayList<>();
 
-        for(DiemEntity diemEntity : listD1){
-
-            if(maGV == diemEntity.getMaMH().getMaGV().getMaGV())
-            {
+        for (DiemEntity diemEntity : listD1) {
+            if (maGV == diemEntity.getMaMH().getMaGV().getMaGV()) {
                 DiemDTO diemDTO1 = convertToDTO(diemEntity);
                 diemDTO.add(diemDTO1);
             }
-
         }
 
         return diemDTO;
+    }
 
+    // Lấy điểm của một sinh viên cụ thể trong một môn học và giảng viên
+    public DiemDTO getDiemByMaSV(int maMH, int maGV, int maSV) {
+        SinhVienEntity sinhVien = sinhVienRepository.findById(maSV)
+                .orElseThrow(() -> new RuntimeException("Sinh viên không tồn tại!"));
+
+        MonHocEntity monHoc = monHocRepository.findById(maMH)
+                .orElseThrow(() -> new RuntimeException("Môn học không tồn tại!"));
+
+        // Kiểm tra xem môn học có thuộc giảng viên không
+        if (monHoc.getMaGV() == null || monHoc.getMaGV().getMaGV() != maGV) {
+            throw new RuntimeException("Môn học không thuộc giảng viên này!");
+        }
+
+        List<DiemEntity> diemList = diemRepository.findByMaSVAndMaMH(sinhVien, monHoc);
+        if (diemList.isEmpty()) {
+            return null; // Không có điểm
+        }
+
+        // Lấy bản ghi đầu tiên (giả định chỉ có một bản ghi cho mỗi sinh viên và môn học)
+        DiemEntity diemEntity = diemList.get(0);
+        return convertToDTO(diemEntity);
     }
 }

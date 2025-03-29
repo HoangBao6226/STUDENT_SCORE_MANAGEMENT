@@ -1,35 +1,38 @@
-<header class="main-header" th:fragment="header"
-		style="background: linear-gradient(to right, rgb(13 110 253), rgb(13 110 253)); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
 
-	<!-- Bên trái: Tiêu đề và credit -->
-	<div style="display: flex; flex-direction: column;">
-		<h2 style="margin: 0; font-weight: bold;">Trang Quản Trị</h2>
-	</div>
+<header class="main-header" th:fragment="header">
+	<!-- Logo -->
+	<a href="/admin/index" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
+		<span class="logo-mini"><b>S</b>TU</span> <!-- logo for regular state and mobile devices -->
+		<span class="logo-lg">SSM STU</span>
+	</a>
+	<!-- Header Navbar: style can be found in header.less -->
+	<nav class="navbar navbar-static-top">
+		<!-- Sidebar toggle button-->
+		<a href="#" class="sidebar-toggle" data-toggle="push-menu"
+			role="button"> 
+			<span class="icon-bar"></span> 
+			<span class="icon-bar"></span> 
+			<span class="icon-bar"></span>
+		</a>
 
-	<!-- Bên phải: Xin chào + Home + Avatar dropdown -->
-	<div style="display: flex; align-items: center; gap: 15px;">
-		<div style="text-align: right;">
-			<p style="margin: 0;">Xin chào! <strong sec:authentication="name">Admin</strong></p>
-			<a th:href="@{/admin}" style="color: white; text-decoration: underline;">Home</a>
-		</div>
-
-		<!-- Avatar dropdown -->
 		<div class="navbar-custom-menu">
-			<ul class="nav navbar-nav" style="margin: 0;">
-				<li class="dropdown user user-menu">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-<!--						<img th:src="@{}" class="user-image" alt="User Image">-->
-					</a>
+			<ul class="nav navbar-nav">
+				<li class="dropdown user user-menu"><a href="#"
+					class="dropdown-toggle" data-toggle="dropdown"> <img
+						th:src="@{/images/avatar5.png}" class="user-image"
+						alt="User Image"> <span class="hidden-xs"><span
+							sec:authentication="name"></span></span>
+				</a>
 					<ul class="dropdown-menu">
-						<li class="user-header">
-<!--							<img th:src="@{}" class="img-circle" alt="User Image">-->
+						<li class="user-header"><img
+							th:src="@{/images/avatar5.png}" class="img-circle"
+							alt="User Image">
 							<div>
-								<a th:href="@{/employee-logout}" class="btn btn-default btn-flat">Sign out</a>
-							</div>
-						</li>
-					</ul>
-				</li>
+								<a th:href="@{/logout}"
+									class="btn btn-default btn-flat">Sign out</a>
+							</div></li>
+					</ul></li>
 			</ul>
 		</div>
-	</div>
+	</nav>
 </header>

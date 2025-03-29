@@ -9,6 +9,8 @@ import com.javaweb.student_score_management.service.implement.DiemService;
 import com.javaweb.student_score_management.service.implement.MonHocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping
 public class MonHocController {
     @Autowired
@@ -25,29 +27,121 @@ public class MonHocController {
     @Autowired
     private MonHocService monHocService;
     //Admin
+
+//    @GetMapping("/admin/monhoc")
+//    public List<MonHocDTO> getAllMonHoc() {
+//        return monHocService.getAllMonHoc();
+//    }
+//
+//    @GetMapping("/admin/monhoc/{id}")
+//    public MonHocDTO getMonHocById(@PathVariable Integer id) {
+//        return monHocService.getMonHocById(id);
+//    }
+//
+//    @PostMapping("/admin/monhoc")
+//    public boolean createMonHoc(@RequestBody MonHocDTO monHocDTO) {
+//        return monHocService.createMonHoc(monHocDTO);
+//    }
+//
+//    @PutMapping("/admin/monhoc/{id}")
+//    public boolean updateMonHoc(@PathVariable Integer id, @RequestBody MonHocDTO monHocDTO) {
+//        return monHocService.updateMonHoc(id, monHocDTO);
+//    }
+//
+//    @DeleteMapping("/admin/monhoc/{id}")
+//    public boolean deleteMonHoc(@PathVariable Integer id) {
+//        return monHocService.deleteMonHoc(id);
+//    }
+    // Hiển thị danh sách môn học (View)
     @GetMapping("/admin/monhoc")
-    public List<MonHocDTO> getAllMonHoc() {
-        return monHocService.getAllMonHoc();
+    public String listMonHoc(Model model) {
+        List<MonHocDTO> list = monHocService.getAllMonHoc();
+        model.addAttribute("list", list);
+        return "admin/monhoc/index"; // templates/admin/monhoc/index.html
     }
 
-    @GetMapping("/admin/monhoc/{id}")
-    public MonHocDTO getMonHocById(@PathVariable Integer id) {
-        return monHocService.getMonHocById(id);
+    // API lấy danh sách môn học (JSON)
+    @GetMapping("/api/monhoc")
+    @ResponseBody
+    public ResponseEntity<List<MonHocDTO>> getAllMonHoc() {
+        return ResponseEntity.ok(monHocService.getAllMonHoc());
     }
 
-    @PostMapping("/admin/monhoc")
-    public boolean createMonHoc(@RequestBody MonHocDTO monHocDTO) {
-        return monHocService.createMonHoc(monHocDTO);
+    // Hiển thị form thêm môn học (View)
+    @GetMapping("/admin/monhoc/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("monHoc", new MonHocDTO());
+        return "admin/monhoc/addMonHoc"; // templates/admin/monhoc/addMonHoc.html
     }
 
-    @PutMapping("/admin/monhoc/{id}")
-    public boolean updateMonHoc(@PathVariable Integer id, @RequestBody MonHocDTO monHocDTO) {
-        return monHocService.updateMonHoc(id, monHocDTO);
+    // API lấy môn học theo ID (JSON)
+    @GetMapping("/api/monhoc/{id}")
+    public ResponseEntity<?> getMonHocById(@PathVariable Integer id) {
+        MonHocDTO monHoc = monHocService.getMonHocById(id);
+        if (monHoc != null) {
+            return ResponseEntity.ok(monHoc);
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Không tìm thấy môn học với ID: " + id + "\"}");
+        }
     }
 
-    @DeleteMapping("/admin/monhoc/{id}")
-    public boolean deleteMonHoc(@PathVariable Integer id) {
-        return monHocService.deleteMonHoc(id);
+    // API thêm môn học (JSON)
+    @PostMapping("/api/monhoc")
+    public ResponseEntity<String> createMonHoc(@RequestBody MonHocDTO monHocDTO) {
+        if (monHocDTO.getTenMH() == null || monHocDTO.getTenMH().isEmpty()) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Tên môn học không được để trống\"}");
+        }
+        if (monHocDTO.getSoTinChi() == null || monHocDTO.getSoTinChi() <= 0) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Số tín chỉ phải lớn hơn 0\"}");
+        }
+        if (monHocDTO.getMaGV() == null) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Mã giảng viên không được để trống\"}");
+        }
+        if (monHocService.existsByTenMH(monHocDTO.getTenMH())) {
+            return ResponseEntity.badRequest().body("{\"message\": \"Tên môn học đã tồn tại!\"}");
+        }
+        boolean created = monHocService.createMonHoc(monHocDTO);
+        if (created) {
+            return ResponseEntity.ok("{\"message\": \"Tạo môn học thành công!\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Tạo môn học thất bại!\"}");
+        }
+    }
+
+    // Hiển thị form chỉnh sửa môn học (View)
+    @GetMapping("/admin/monhoc/edit/{id}")
+    public String showEditForm(@PathVariable Integer id, Model model) {
+        MonHocDTO monHoc = monHocService.getMonHocById(id);
+        if (monHoc == null) {
+            throw new IllegalArgumentException("Không tìm thấy môn học với ID: " + id);
+        }
+        model.addAttribute("monHoc", monHoc);
+        return "admin/monhoc/editMonHoc"; // templates/admin/monhoc/editMonHoc.html
+    }
+
+    // API cập nhật môn học (JSON)
+    @PutMapping("/api/monhoc/{id}")
+    @ResponseBody
+    public ResponseEntity<String> updateMonHoc(@PathVariable Integer id, @RequestBody MonHocDTO monHocDTO) {
+        monHocDTO.setMaMH(id);
+
+        if (monHocService.updateMonHoc(id, monHocDTO)) {
+            return ResponseEntity.ok("{\"message\": \"Cập nhật môn học thành công!\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Cập nhật môn học thất bại!\"}");
+        }
+    }
+
+    // API xóa môn học (JSON)
+    @DeleteMapping("/api/monhoc/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteMonHoc(@PathVariable Integer id) {
+        boolean deleted = monHocService.deleteMonHoc(id);
+        if (deleted) {
+            return ResponseEntity.ok("{\"message\": \"Xóa môn học thành công!\"}");
+        } else {
+            return ResponseEntity.badRequest().body("{\"message\": \"Không tìm thấy môn học với ID: " + id + "\"}");
+        }
     }
 
     //SV

@@ -27,36 +27,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        //bỏ qua đăng nhập để test
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(authorize -> {
-                    try {
-                        authorize
-                                .requestMatchers("/**").permitAll() // 🔥 Bỏ qua xác thực cho tất cả request
-                                .anyRequest().permitAll();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                })
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .authorizeHttpRequests(authorize -> {
-//                    try {
-//                        authorize
-//                                .requestMatchers("/sinhvien/bangdiem").permitAll()
-//                                .requestMatchers("/login", "/css/**", "/js/**").permitAll()
-//                                .requestMatchers("/admin/index").hasAuthority("Admin")
-//                                .requestMatchers("/giangvien/index").hasAuthority("GiangVien")
-//                                .requestMatchers("/sinhvien/index").hasAuthority("SinhVien")
-//                                .anyRequest().authenticated();
-//
-////                        System.out.println("DEBUG: Cấu hình bảo mật đã tải thành công!");
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                })
+                .authorizeHttpRequests(authorize -> authorize
+                        // Cho phép truy cập công khai vào các tài nguyên tĩnh và trang login
+                        .requestMatchers("/login", "/logout", "/css/**", "/js/**", "/images/**", "/vendor/**").permitAll()
+                        // Chỉ Admin được truy cập các endpoint /admin/**
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Chỉ GiangVien được truy cập các endpoint /giangvien/**
+                        .requestMatchers("/giangvien/**").hasRole("GIANGVIEN")
+                        // Chỉ SinhVien được truy cập các endpoint /sinhvien/**
+                        .requestMatchers("/sinhvien/**").hasRole("SINHVIEN")
+                        // Các API công khai (nếu cần, ví dụ: /api/monhoc)
+                        .requestMatchers("/api/monhoc", "/api/monhoc/**").permitAll()
+                        // Tất cả các yêu cầu khác phải được xác thực
+                        .anyRequest().authenticated()
+                )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .successHandler(customSuccessHandler)
@@ -64,8 +50,11 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
+                        .permitAll()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                );
 
         return http.build();
     }

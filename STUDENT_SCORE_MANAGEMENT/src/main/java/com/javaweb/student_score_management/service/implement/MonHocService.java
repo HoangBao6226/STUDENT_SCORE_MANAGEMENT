@@ -23,7 +23,9 @@ public class MonHocService {
     public List<MonHocDTO> getAllMonHoc() {
         return monHocRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
-
+    public boolean existsByTenMH(String tenMH) {
+        return monHocRepository.existsByTenMH(tenMH);
+    }
     public MonHocDTO getMonHocById(Integer id) {
         return monHocRepository.findById(id).map(this::convertToDTO).orElse(null);
     }
@@ -33,6 +35,11 @@ public class MonHocService {
             MonHocEntity monHoc = new MonHocEntity();
             monHoc.setTenMH(monHocDTO.getTenMH());
             monHoc.setSoTinChi(monHocDTO.getSoTinChi());
+            if (monHocDTO.getMaGV() != null) {
+                GiangVienEntity giangVien = giangVienRepository.findById(monHocDTO.getMaGV())
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên với ID: " + monHocDTO.getMaGV()));
+                monHoc.setMaGV(giangVien);
+            }
             monHocRepository.save(monHoc);
             return true;
         } catch (Exception e) {
@@ -44,6 +51,11 @@ public class MonHocService {
         return monHocRepository.findById(id).map(monHoc -> {
             monHoc.setTenMH(monHocDTO.getTenMH());
             monHoc.setSoTinChi(monHocDTO.getSoTinChi());
+            if (monHocDTO.getMaGV() != null) {
+                GiangVienEntity giangVien = giangVienRepository.findById(monHocDTO.getMaGV())
+                        .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên với ID: " + monHocDTO.getMaGV()));
+                monHoc.setMaGV(giangVien);
+            }
             monHocRepository.save(monHoc);
             return true;
         }).orElse(false);

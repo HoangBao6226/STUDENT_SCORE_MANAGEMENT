@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface MonHocRepository extends JpaRepository<MonHocEntity, Integer> {
-
+    boolean existsByTenMH(String tenMH);
     List<MonHocEntity> findByMaGV(GiangVienEntity maGV);
     List<MonHocEntity> findByTenMHContainingIgnoreCase(String tenMH);
 
