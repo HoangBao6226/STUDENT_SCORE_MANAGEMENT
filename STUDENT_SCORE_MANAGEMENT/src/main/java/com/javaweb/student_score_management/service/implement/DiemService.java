@@ -35,6 +35,15 @@ public class DiemService {
         return diemRepository.getDiemDetailsByMaSV(maSV);
     }
 
+    public List<DiemEntity> findByMaSVAndMaMH(Integer maSV, Integer maMH) {
+        SinhVienEntity sinhVien = sinhVienRepository.findById(maSV)
+                .orElseThrow(() -> new RuntimeException("Sinh viên không tồn tại!"));
+
+        MonHocEntity monHoc = monHocRepository.findById(maMH)
+                .orElseThrow(() -> new RuntimeException("Môn học không tồn tại!"));
+
+        return diemRepository.findByMaSVAndMaMH(sinhVien, monHoc);
+    }
     // Đăng ký môn học mới (luôn thêm bản ghi mới)
     public String dangKyMonHoc(Integer maSV, Integer maMH) {
         SinhVienEntity sinhVien = sinhVienRepository.findById(maSV).orElse(null);

@@ -2,9 +2,11 @@ package com.javaweb.student_score_management.service.implement;
 
 import com.javaweb.student_score_management.DTO.TaiKhoanDTO;
 import com.javaweb.student_score_management.entity.GiangVienEntity;
+import com.javaweb.student_score_management.entity.MonHocEntity;
 import com.javaweb.student_score_management.entity.SinhVienEntity;
 import com.javaweb.student_score_management.entity.TaiKhoanEntity;
 import com.javaweb.student_score_management.repository.GiangVienRepository;
+import com.javaweb.student_score_management.repository.MonHocRepository;
 import com.javaweb.student_score_management.repository.SinhVienRepository;
 import com.javaweb.student_score_management.repository.TaiKhoanRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,9 @@ public class TaiKhoanService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private MonHocRepository monHocRepository;
+
     public TaiKhoanEntity findByUsername(String username) {
         return taiKhoanRepository.findByUsername(username).orElse(null);
     }
@@ -62,13 +67,7 @@ public class TaiKhoanService {
                 giangVienRepository.save(giangVienEntity);
                 taiKhoanEntity.setMaGV(giangVienRepository.findById(giangVienEntity.getMaGV()).get());
                 taiKhoanEntity.setRole(TaiKhoanEntity.Role.GiangVien);
-                taiKhoanEntity.setUsername(taiKhoan.getUsername());
-                taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-//            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-                taiKhoanRepository.save(taiKhoanEntity);
 
-                logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
-                return true;
             } else{
                 if (sinhVienRepository.existsByEmail(taiKhoan.getEmail())) {
                     logger.error("Email đã tồn tại trong SinhVien: {}", taiKhoan.getEmail());
@@ -80,23 +79,17 @@ public class TaiKhoanService {
                 sinhVienEntity.setTenSV(taiKhoan.getName());
                 sinhVienRepository.save(sinhVienEntity);
                 taiKhoanEntity.setMaSV(sinhVienRepository.findById(sinhVienEntity.getMaSV()).get());
-                taiKhoanEntity.setUsername(taiKhoan.getUsername());
-                taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-//            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-                taiKhoanRepository.save(taiKhoanEntity);
 
-                logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
-                return true;
             }
 
 
-//            taiKhoanEntity.setUsername(taiKhoan.getUsername());
-//            taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-////            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
-//            taiKhoanRepository.save(taiKhoanEntity);
-//
-//            logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
-//            return true;
+            taiKhoanEntity.setUsername(taiKhoan.getUsername());
+            taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+//            taiKhoan.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
+            taiKhoanRepository.save(taiKhoanEntity);
+
+            logger.info("Tạo tài khoản thành công: {}", taiKhoan.getUsername());
+            return true;
         } catch (Exception e) {
             logger.error("Lỗi khi tạo tài khoản: ", e);
             return false;
@@ -131,17 +124,38 @@ public class TaiKhoanService {
 
     public Boolean delete(Integer id) {
         try {
-            if (taiKhoanRepository.existsById(id)) {
-                taiKhoanRepository.deleteById(id);
-                logger.info("Xóa tài khoản thành công với ID: {}", id);
-                return true;
-            } else {
+            if (!taiKhoanRepository.existsById(id)) {
                 logger.error("Không tìm thấy tài khoản với ID: {}", id);
                 return false;
             }
+            Optional<TaiKhoanEntity> taiKhoanOpt = taiKhoanRepository.findById(id);
+            if (taiKhoanOpt.isPresent()) {
+                TaiKhoanEntity taiKhoan = taiKhoanOpt.get();
+
+                // Kiểm tra nếu tài khoản có liên kết với giảng viên
+                if (taiKhoan.getMaGV() != null) {
+                    GiangVienEntity giangVien = taiKhoan.getMaGV();
+                    List<MonHocEntity> danhSachMonHoc = monHocRepository.findByMaGV(giangVien);
+
+                    if (!danhSachMonHoc.isEmpty()) {
+                        logger.error("Không thể xóa giảng viên ID: {} vì còn môn học đang giảng dạy", id);
+                        return false;
+                    }
+                }
+
+                // Nếu không có ràng buộc, tiến hành xóa
+                taiKhoanRepository.deleteById(id);
+                logger.info("Xóa tài khoản thành công với ID: {}", id);
+                return true;
+            }
+
+            return false;
         } catch (Exception e) {
             logger.error("Lỗi khi xóa tài khoản: ", e);
             return false;
         }
     }
+
 }
+
+
