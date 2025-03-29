@@ -12,5 +12,6 @@ public interface SinhVienRepository extends JpaRepository<SinhVienEntity, Intege
     List<SinhVienEntity> findAll();
     Optional<SinhVienEntity> findById(Integer maSV);
     boolean existsByEmail(String email);
+//    boolean existsByGiangVienId(Integer giangVienId);
 
 }
