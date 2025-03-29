@@ -165,12 +165,28 @@ public class MonHocController {
         Map<String, Object> response = new HashMap<>();
         Integer maSV = dangKyMonHocDTO.getMaSV();
         List<Integer> maMHList = dangKyMonHocDTO.getMaMHList();
+        List<Integer> monHocBiChan = new ArrayList<>();
+        List<Integer> monHocDangKyThanhCong = new ArrayList<>();
 
         try {
             for (Integer maMH : maMHList) {
+                List<DiemEntity> diemList = diemService.findByMaSVAndMaMH(maSV, maMH);
+
+                // Nếu môn đã tồn tại và có điểm = null, thì không cho đăng ký lại
+                boolean daCoDiemNull = diemList.stream().anyMatch(diem -> diem.getDiem() == null);
+                if (!diemList.isEmpty() && daCoDiemNull) {
+                    monHocBiChan.add(maMH);
+                    continue; // Bỏ qua môn này
+                }
+
+                // Nếu môn hợp lệ, tiến hành đăng ký
                 diemService.dangKyMonHoc(maSV, maMH);
+                monHocDangKyThanhCong.add(maMH);
             }
-            response.put("message", "Đăng ký môn học thành công!");
+
+            response.put("message", "Đăng ký môn học hoàn tất!");
+            response.put("monHocBiChan", monHocBiChan);
+            response.put("monHocDangKyThanhCong", monHocDangKyThanhCong);
 
             // Lấy danh sách điểm mới với DiemDTO
             List<DiemDTO> diemList = diemService.getDiemBySinhVienID(maSV);
@@ -183,6 +199,8 @@ public class MonHocController {
 
         return ResponseEntity.ok(response);
     }
+
+
 
     @DeleteMapping("/sinhvien/xoa")
     public ResponseEntity<Map<String, Object>> xoaNhieuMonHoc(@RequestBody XoaMonHocDTO xoaMonHocDTO) {
