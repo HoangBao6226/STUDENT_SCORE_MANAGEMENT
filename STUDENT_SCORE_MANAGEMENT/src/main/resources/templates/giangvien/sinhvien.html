@@ -34,26 +34,6 @@
         <p th:text="${success}"></p>
       </div>
 
-      <!-- Form thêm sinh viên -->
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title">Thêm Sinh Viên</h3>
-        </div>
-        <div class="box-body">
-          <form th:action="@{/giangvien/monhoc/{maGV}/{maMH}/add-sinhvien(maGV=${maGV}, maMH=${maMH})}" th:object="${sinhVien}" method="post">
-            <div class="form-group">
-              <label for="maSV">Mã Sinh Viên:</label>
-              <input type="number" class="form-control" id="maSV" th:field="*{maSV}" required>
-            </div>
-            <div class="form-group">
-              <label for="tenSV">Tên Sinh Viên:</label>
-              <input type="text" class="form-control" id="tenSV" th:field="*{tenSV}" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Thêm Sinh Viên</button>
-          </form>
-        </div>
-      </div>
-
       <!-- Danh sách sinh viên -->
       <div class="box">
         <div class="box-header with-border">

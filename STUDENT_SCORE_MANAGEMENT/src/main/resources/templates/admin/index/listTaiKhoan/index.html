@@ -45,9 +45,6 @@
                             <td th:text="${account.maAdmin != null ? account.maAdmin.tenAdmin : 'N/A'}"></td>
                             <td>
                                 <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
-                                <a th:href="@{/admin/deleteTaiKhoan/{id}(id=${account.maTK})}"
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')"
-                                   class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                         <tr th:unless="${#lists.size(list.?[role.name() == 'Admin']) > 0}">
@@ -82,9 +79,7 @@
                             <td th:text="${account.maGV != null ? account.maGV.tenGV : 'N/A'}"></td>
                             <td>
                                 <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
-                                <a th:href="@{/admin/deleteTaiKhoan/{id}(id=${account.maTK})}"
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')"
-                                   class="btn btn-danger btn-sm">Delete</a>
+                                <button th:onclick="'deleteAccount(' + ${account.maTK} + ')'" class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
                         <tr th:unless="${#lists.size(list.?[role.name() == 'GiangVien']) > 0}">
@@ -119,9 +114,7 @@
                             <td th:text="${account.maSV != null ? account.maSV.tenSV : 'N/A'}"></td>
                             <td>
                                 <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
-                                <a th:href="@{/admin/deleteTaiKhoan/{id}(id=${account.maTK})}"
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?')"
-                                   class="btn btn-danger btn-sm">Delete</a>
+                                <button th:onclick="'deleteAccount(' + ${account.maTK} + ')'" class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
                         <tr th:unless="${#lists.size(list.?[role.name() == 'SinhVien']) > 0}">

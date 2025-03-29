@@ -105,25 +105,7 @@ public class GiangVienController {
         return ResponseEntity.ok(dsSinhVien);
     }
 
-    // API thêm sinh viên (JSON)
-    @PostMapping("/monhoc/{maGV}/{maMH}/add-sinhvien")
-    @ResponseBody
-    public ResponseEntity<String> addSinhVien(@PathVariable int maGV, @PathVariable int maMH,  @RequestBody SinhVienEntity sinhVien, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        if (userDetails.getMaGV() == null || userDetails.getMaGV() != maGV) {
-            return ResponseEntity.status(403).body("{\"message\": \"Bạn không có quyền thêm sinh viên!\"}");
-        }
 
-        logger.info("Dữ liệu nhận được: {}", sinhVien);
-
-        try {
-            sinhVienService.addSinhVien(sinhVien);
-            return ResponseEntity.ok("{\"message\": \"Thêm sinh viên thành công!\"}");
-        } catch (Exception e) {
-            logger.error("Lỗi khi thêm sinh viên: {}", e.getMessage());
-            return ResponseEntity.badRequest().body("{\"message\": \"Thêm sinh viên thất bại: " + e.getMessage() + "\"}");
-        }
-    }
 
     // API cập nhật điểm (JSON)
     @PutMapping("/diem/{maGV}/{maMH}/{maSV}/update")

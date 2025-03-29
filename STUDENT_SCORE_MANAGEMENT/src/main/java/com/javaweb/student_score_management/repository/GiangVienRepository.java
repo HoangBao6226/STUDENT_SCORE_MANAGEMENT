@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface GiangVienRepository extends JpaRepository<GiangVienEntity, Integer> {
+    boolean existsByEmail(String email);
 
 
 }
