@@ -95,4 +95,12 @@ public class MonHocService {
         return monHocDTOList;
 
     }
+    public List<MonHocDTO> findMonHocByTenMHGanDung(String tenMH) {
+        List<MonHocEntity> monHocList = monHocRepository.findByTenMHContainingIgnoreCase(tenMH);
+        return monHocList.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    public List<MonHocEntity> timKiemMonHocTheoTen(String tenMH) {
+        return monHocRepository.findByTenMHContainingIgnoreCase(tenMH);
+    }
 }

@@ -145,6 +145,21 @@ public class MonHocController {
     }
 
     //SV
+    @GetMapping("monhoc/search")
+    public ResponseEntity<Map<String, Object>> searchMonHocByTenGanDung(@RequestParam String keyword) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<MonHocDTO> monHocList = monHocService.findMonHocByTenMHGanDung(keyword);
+            response.put("monHocList", monHocList);
+            response.put("message", "Tìm kiếm thành công");
+            response.put("count", monHocList.size());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "Lỗi khi tìm kiếm: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     @PostMapping("/sinhvien/dangky")
     public ResponseEntity<Map<String, Object>> dangKyMonHoc(@RequestBody DangKyMonHocDTO dangKyMonHocDTO) {
         Map<String, Object> response = new HashMap<>();
