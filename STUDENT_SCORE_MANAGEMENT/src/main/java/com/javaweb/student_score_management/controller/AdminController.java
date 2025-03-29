@@ -113,11 +113,17 @@ public class AdminController {
     @DeleteMapping("/deleteTaiKhoan/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteAccount(@PathVariable Integer id) {
-        boolean deleted = taiKhoanService.delete(id);
-        if (deleted) {
-            return ResponseEntity.ok("Xóa tài khoản thành công!");
-        } else {
-            return ResponseEntity.badRequest().body("Không tìm thấy tài khoản với ID: " + id);
+        try {
+            boolean deleted = taiKhoanService.delete(id);
+            if (deleted) {
+                return ResponseEntity.ok("Xóa tài khoản thành công!");
+            } else {
+                return ResponseEntity.badRequest().body("Không tìm thấy tài khoản với ID: " + id);
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi hệ thống khi xóa tài khoản");
         }
     }
 }

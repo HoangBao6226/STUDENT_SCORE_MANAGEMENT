@@ -18,6 +18,8 @@ if (!window.dangKyMonHocInitialized) {
                 <p>${message}</p>
             `;
             document.querySelector('.content').insertBefore(alertDiv, document.querySelector('.box'));
+            // Tự động ẩn sau 5 giây
+            setTimeout(() => alertDiv.remove(), 5000);
         }
 
         // Hàm lấy danh sách môn học có sẵn
@@ -31,26 +33,7 @@ if (!window.dangKyMonHocInitialized) {
             })
                 .then(response => response.json())
                 .then(data => {
-                    const tbody = document.getElementById('monHocTableBody');
-                    tbody.innerHTML = ''; // Xóa nội dung hiện tại của bảng
-
-                    if (data.length === 0) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = '<td colspan="5" style="text-align: center;">Không có môn học nào</td>';
-                        tbody.appendChild(row);
-                    } else {
-                        data.forEach(monHoc => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                            <td><input type="checkbox" class="monHocCheckbox" value="${monHoc.maMH}"></td>
-                            <td>${monHoc.maMH}</td>
-                            <td>${monHoc.tenMH}</td>
-                            <td>${monHoc.tenGV}</td>
-                            <td>${monHoc.soTinChi}</td>
-                        `;
-                            tbody.appendChild(row);
-                        });
-                    }
+                    populateMonHocTable(data, true); // Thêm hiệu ứng động
                 })
                 .catch(error => {
                     console.error('Lỗi:', error);
@@ -59,9 +42,68 @@ if (!window.dangKyMonHocInitialized) {
                 });
         }
 
+        // Hàm tìm kiếm môn học theo từ khóa
+        function searchMonHoc(keyword) {
+            console.log('Searching subjects with keyword:', keyword);
+            fetch(`/monhoc/search?keyword=${encodeURIComponent(keyword)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không tìm thấy môn học');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.monHocList && data.monHocList.length > 0) {
+                        populateMonHocTable(data.monHocList, true); // Thêm hiệu ứng động
+                    } else {
+                        populateMonHocTable([], true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi tìm kiếm:', error);
+                    populateMonHocTable([], true);
+                });
+        }
+
+        // Hàm hiển thị danh sách môn học vào bảng với hiệu ứng động
+        function populateMonHocTable(monHocList, withAnimation = false) {
+            const tbody = document.getElementById('monHocTableBody');
+            tbody.innerHTML = ''; // Xóa nội dung hiện tại của bảng
+
+            if (monHocList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Không có môn học nào</td></tr>';
+            } else {
+                monHocList.forEach((monHoc, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="monHocCheckbox" value="${monHoc.maMH}"></td>
+                        <td>${monHoc.maMH}</td>
+                        <td>${monHoc.tenMH}</td>
+                        <td>${monHoc.tenGV || 'Chưa có'}</td>
+                        <td>${monHoc.soTinChi}</td>
+                    `;
+                    if (withAnimation) {
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                            row.style.opacity = '1';
+                            row.style.transform = 'translateY(0)';
+                        }, index * 50); // Hiệu ứng xuất hiện lần lượt
+                    }
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
         // Hàm lấy danh sách môn học đã đăng ký
         function fetchDiemList() {
-            console.log('Fetching registered subjects from /sinhvien/' + maSV);
+            console.log('Fetching registered subjects for maSV:', maSV);
             fetch(`/sinhvien/${maSV}`, {
                 method: 'GET',
                 headers: {
@@ -79,20 +121,18 @@ if (!window.dangKyMonHocInitialized) {
                     tbody.innerHTML = ''; // Xóa nội dung hiện tại của bảng
 
                     if (data.length === 0) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = '<td colspan="6" style="text-align: center;">Chưa đăng ký môn học nào</td>';
-                        tbody.appendChild(row);
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Chưa đăng ký môn học nào</td></tr>';
                     } else {
                         data.forEach(diem => {
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                            <td><input type="checkbox" class="diemCheckbox" value="${diem.maMH}"></td>
-                            <td>${diem.maMH}</td>
-                            <td>${diem.tenMH}</td>
-                            <td>${diem.tenGV}</td>
-                            <td>${diem.soTinChi}</td>
-                            <td>${diem.diem !== null ? diem.diem : 'Chưa có điểm'}</td>
-                        `;
+                                <td><input type="checkbox" class="diemCheckbox" value="${diem.maMH}"></td>
+                                <td>${diem.maMH}</td>
+                                <td>${diem.tenMH}</td>
+                                <td>${diem.tenGV || 'Chưa có'}</td>
+                                <td>${diem.soTinChi}</td>
+                                <td>${diem.diem !== null ? diem.diem : 'Chưa có điểm'}</td>
+                            `;
                             tbody.appendChild(row);
                         });
                     }
@@ -119,6 +159,25 @@ if (!window.dangKyMonHocInitialized) {
                 checkbox.checked = this.checked;
             });
         });
+
+        // Debounce để hạn chế số lần gọi API khi nhập nhanh
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        // Xử lý sự kiện nhập ký tự vào ô tìm kiếm
+        document.getElementById('searchKeyword').addEventListener('input', debounce(function () {
+            const keyword = this.value.trim();
+            if (keyword) {
+                searchMonHoc(keyword);
+            } else {
+                fetchMonHocList(); // Nếu ô trống, tải lại danh sách đầy đủ
+            }
+        }, 300)); // Trễ 300ms
 
         // Hàm gọi API đăng ký môn học
         function dangKyMonHoc() {
@@ -155,8 +214,8 @@ if (!window.dangKyMonHocInitialized) {
                 })
                 .then(data => {
                     showAlert(data.message, 'success');
-                    fetchDiemList(); // Cập nhật danh sách môn học đã đăng ký
-                    fetchMonHocList(); // Cập nhật danh sách môn học có sẵn (nếu cần)
+                    fetchDiemList(); // Cập nhật danh sách đã đăng ký
+                    fetchMonHocList(); // Cập nhật danh sách có sẵn
                 })
                 .catch(error => {
                     showAlert(error.message, 'danger');
@@ -208,8 +267,8 @@ if (!window.dangKyMonHocInitialized) {
                         message += ` Không thể xóa (đã có điểm): ${data.khongTheXoa.join(', ')}.`;
                     }
                     showAlert(message, 'success');
-                    fetchDiemList(); // Cập nhật danh sách môn học đã đăng ký
-                    fetchMonHocList(); // Cập nhật danh sách môn học có sẵn (nếu cần)
+                    fetchDiemList(); // Cập nhật danh sách đã đăng ký
+                    fetchMonHocList(); // Cập nhật danh sách có sẵn
                 })
                 .catch(error => {
                     showAlert(error.message, 'danger');

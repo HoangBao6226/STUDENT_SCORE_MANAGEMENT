@@ -127,7 +127,7 @@ if (!window.adminTaiKhoanInitialized) {
 
         // Hàm xóa tài khoản
         function deleteTaiKhoan(id) {
-            if (isSubmitting) return; // Nếu đang gửi request, bỏ qua
+            if (isSubmitting) return;
 
             if (!confirm("Bạn có chắc muốn xóa tài khoản này?")) {
                 return;
@@ -144,33 +144,36 @@ if (!window.adminTaiKhoanInitialized) {
                     }
                     return response.text();
                 })
-                .then(data => {
-                    const message = data || "Xóa tài khoản thành công!";
+                .then(message => {
                     const alertDiv = document.createElement('div');
                     alertDiv.className = `alert alert-${message.includes("thành công") ? 'success' : 'danger'} alert-dismissible`;
                     alertDiv.innerHTML = `
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <p>${message}</p>
-                    `;
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p>${message}</p>
+                ${message.includes("điểm môn học") ?
+                        '<p><a href="/admin/index/listDiem?maSV=' + id + '">Xem điểm sinh viên</a></p>' : ''}
+                ${message.includes("môn học đang giảng dạy") ?
+                        '<p><a href="/admin/index/listMonHoc?maGV=' + id + '">Xem môn học giảng dạy</a></p>' : ''}
+            `;
                     document.querySelector('.content').insertBefore(alertDiv, document.querySelector('.box'));
 
                     if (message.includes("thành công")) {
                         setTimeout(() => {
                             location.reload();
-                        }, 1000); // Làm mới trang sau 1 giây
+                        }, 1000);
                     }
                 })
                 .catch(error => {
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'alert alert-danger alert-dismissible';
                     errorDiv.innerHTML = `
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <p>${error.message || "Có lỗi xảy ra khi xóa tài khoản!"}</p>
-                    `;
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p>${error.message || "Có lỗi xảy ra khi xóa tài khoản!"}</p>
+            `;
                     document.querySelector('.content').insertBefore(errorDiv, document.querySelector('.box'));
                 })
                 .finally(() => {
-                    isSubmitting = false; // Đánh dấu đã hoàn thành
+                    isSubmitting = false;
                 });
         }
 
