@@ -11,4 +11,5 @@ import java.util.List;
 public interface MonHocRepository extends JpaRepository<MonHocEntity, Integer> {
     boolean existsByTenMH(String tenMH);
     List<MonHocEntity> findByMaGV(GiangVienEntity maGV);
+
 }
