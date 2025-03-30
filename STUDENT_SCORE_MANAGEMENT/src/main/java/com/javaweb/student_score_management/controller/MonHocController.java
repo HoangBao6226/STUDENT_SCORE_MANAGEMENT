@@ -100,6 +100,21 @@ public class MonHocController {
         }
     }
 
+    //Thymeleaf API
+    @GetMapping("/api/monhoc")
+    public String listMonHoc() {
+        return "admin/monhoc/index";
+    }
+
+    @GetMapping("/admin/monhoc/add")
+    public String addMonHoc() {
+        return "admin/monhoc/addMonHoc";
+    }
+
+    @GetMapping("/admin/monhoc/edit/{id}")
+    public String editMonHoc() {
+        return "admin/monhoc/editMonHoc";
+    }
 
     // Văn Huy ========================================================================
 

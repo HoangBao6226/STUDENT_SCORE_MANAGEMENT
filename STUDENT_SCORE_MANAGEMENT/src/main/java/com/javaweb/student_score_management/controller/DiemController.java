@@ -65,6 +65,10 @@ public class DiemController {
         return ResponseEntity.ok(diemService.getDiemByMaSV(maSV));
     }
 
+    @GetMapping("/admin/diem")
+    public String diem() {
+        return "admin/diem/index";
+    }
 //    @DeleteMapping("/admin/diem/{id}")
 //    public ResponseEntity<String> deleteDiem(@PathVariable Integer id) {
 //        logger.info("Xóa điểm ID: {}", id);
