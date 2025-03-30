@@ -12,6 +12,12 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
+select * from taikhoan;
+select * from admin;
+select * from giangvien;
+select * from sinhvien;
+select * from monhoc;
+select * from diem;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -41,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`MaAdmin`, `TenAdmin`, `Email`) VALUES
-    (1, 'Nguyễn Hoàng Bảo', 'yoonhoang6226@gmail.com');
+    (1, 'Nguyễn Hoàng Bảo', 'bao@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -64,12 +70,15 @@ CREATE TABLE IF NOT EXISTS `diem` (
 -- Đang đổ dữ liệu cho bảng `diem`
 --
 
--- INSERT INTO `diem` (`maDiem`, `maSV`, `maMH`, `diem`) VALUES
--- (1, 1, 1, 7.50),
--- (2, 1, 2, 8.00),
--- (3, 1, 3, 6.50),
--- (4, 2, 1, 9.00),
--- (5, 2, 4, 7.00),
+INSERT INTO `diem` (`maSV`, `maMH`) VALUES
+(2, 6);
+
+INSERT INTO `diem` (`maDiem`, `maSV`, `maMH`, `diem`) VALUES
+(1, 1, 2, 7.50),
+(2, 1, 2, 8.00),
+(3, 1, 4, 6.50),
+(4, 2, 4, 9.00),
+(5, 2, 4, 7.00);
 -- (6, 3, 2, 8.50),
 -- (7, 3, 5, 6.00),
 -- (8, 4, 3, 7.80),
@@ -96,9 +105,9 @@ CREATE TABLE IF NOT EXISTS `giangvien` (
 -- Đang đổ dữ liệu cho bảng `giangvien`
 --
 
--- INSERT INTO `giangvien` (`MaGV`, `TenGV`, `Email`) VALUES
--- (1, 'Hà Thị Mỹ Châu', 'chau28400@gmail.com'),
--- (2, 'Nguyễn Văn Huy', 'vanhuy27062003@gmail.com');
+INSERT INTO `giangvien` (`MaGV`, `TenGV`, `Email`) VALUES
+(1, 'Hà Thị Mỹ Châu', 'chau28400@gmail.com'),
+(2, 'Nguyễn Hoàng Bảo', 'yoonhoang6226@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -149,12 +158,12 @@ CREATE TABLE IF NOT EXISTS `sinhvien` (
 -- Đang đổ dữ liệu cho bảng `sinhvien`
 --
 
--- INSERT INTO `sinhvien` (`MaSV`, `TenSV`, `Email`) VALUES
--- (1, 'Phạm Minh Anh', 'dh52110568@student.stu.edu.vn'),
--- (2, 'Nguyễn Thành Công', 'dh52110649@student.stu.edu.vn'),
--- (3, 'Huy Nguyễn', 'dh52107926@student.stu.edu.vn'),
--- (4, 'Châu Hà', 'dh52110640@student.stu.edu.vn'),
--- (5, 'Bảo Nguyễn', 'dh52110602@student.stu.edu.vn');
+INSERT INTO `sinhvien` (`MaSV`, `TenSV`, `Email`) VALUES
+(1, 'Phạm Minh Anh', 'dh52110568@student.stu.edu.vn'),
+(2, 'Nguyễn Thành Công', 'dh52110649@student.stu.edu.vn'),
+(3, 'Huy Nguyễn', 'dh52107926@student.stu.edu.vn'),
+(4, 'Châu Hà', 'dh52110640@student.stu.edu.vn'),
+(5, 'Bảo Nguyễn', 'dh52110602@student.stu.edu.vn');
 
 -- --------------------------------------------------------
 
@@ -183,9 +192,9 @@ CREATE TABLE IF NOT EXISTS `taikhoan` (
 --
 
 INSERT INTO `taikhoan` (`MaTK`, `Username`, `Password`, `Role`, `MaAdmin`, `MaGV`, `MaSV`) VALUES
-    (1, 'admin1', '123', 'Admin', 1, NULL, NULL);
--- (2, 'gv1', '123', 'GiangVien', NULL, 1, NULL),
--- (3, 'gv2', '123', 'GiangVien', NULL, 2, NULL),
+    (1, 'admin1', '123', 'Admin', 1, NULL, NULL),
+(2, 'gv1', '123', 'GiangVien', NULL, 1, NULL),
+(3, 'gv2', '123', 'GiangVien', NULL, 2, NULL);
 -- (4, 'sv1', '123', 'SinhVien', NULL, NULL, 1),
 -- (5, 'sv2', '123', 'SinhVien', NULL, NULL, 2),
 -- (6, 'sv3', '123', 'SinhVien', NULL, NULL, 3),

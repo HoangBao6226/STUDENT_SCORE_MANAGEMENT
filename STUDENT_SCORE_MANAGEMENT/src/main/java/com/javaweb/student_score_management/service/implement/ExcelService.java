@@ -11,7 +11,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,14 +45,21 @@ public class ExcelService {
 
             SinhVienEntity sv = sinhVienRepository.findById((int) row.getCell(0).getNumericCellValue()).get();
             MonHocEntity mh = monHocRepository.findById((int) row.getCell(1).getNumericCellValue()).get();
-            DiemEntity diem = new DiemEntity();
-            diem.setMaSV(sv);
-            diem.setMaMH(mh);
-            diem.setDiem((float) row.getCell(2).getNumericCellValue());
 
-            diemRepository.save(diem);
+            DiemEntity diemEntity = diemRepository.getDiemNull(sv, mh);
+            if (diemEntity != null) {
+                diemEntity.setDiem((float) row.getCell(2).getNumericCellValue());
+            } else {
+                diemEntity = new DiemEntity();
+                diemEntity.setMaSV(sv);
+                diemEntity.setMaMH(mh);
+                diemEntity.setDiem((float) row.getCell(2).getNumericCellValue());
+            }
 
-            DiemDTO diemDTO = diemService.convertToDTO(diem);
+            diemRepository.save(diemEntity);
+
+            DiemDTO diemDTO = diemService.convertToDTO(diemEntity);
+
             diemDTOList.add(diemDTO);
         }
         workbook.close();
