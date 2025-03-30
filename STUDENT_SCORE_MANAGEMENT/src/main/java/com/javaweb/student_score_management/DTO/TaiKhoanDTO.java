@@ -6,6 +6,30 @@ public class TaiKhoanDTO {
     private String password;
     private String email;
     private String name;
+    private int maTK;
+    private Integer maChuTK;
+
+    public TaiKhoanDTO(String account_type, String username, String password, String email, String name, int maTK, Integer maChuTK) {
+        this.account_type = account_type;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.maTK = maTK;
+        this.maChuTK = maChuTK;
+    }
+
+    public Integer getMaChuTK() {
+        return maChuTK;
+    }
+
+    public void setMaChuTK(Integer maChuTK) {
+        this.maChuTK = maChuTK;
+    }
+
+
+
+    public TaiKhoanDTO() { }
 
     public int getMaTK() {
         return maTK;
@@ -15,19 +39,12 @@ public class TaiKhoanDTO {
         this.maTK = maTK;
     }
 
-    private int maTK;
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-
-
-    public TaiKhoanDTO() {
     }
 
     public String getUsername() {
