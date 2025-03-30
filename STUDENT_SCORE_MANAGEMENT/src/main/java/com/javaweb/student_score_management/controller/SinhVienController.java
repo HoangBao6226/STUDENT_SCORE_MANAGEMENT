@@ -106,10 +106,11 @@ public class SinhVienController {
             return new DiemDTO(
                     diem.getMaDiem(),
                     sinhVien.getMaSV(),
-                    monHoc.getMaMH(),
                     sinhVien.getTenSV(),
-                    giangVien != null ? giangVien.getTenGV() : "Chưa có",
+                    monHoc.getMaMH(),
                     monHoc.getTenMH(),
+                    giangVien.getMaGV(),
+                    giangVien != null ? giangVien.getTenGV() : "Chưa có",
                     monHoc.getSoTinChi(),
                     diem.getDiem()
             );

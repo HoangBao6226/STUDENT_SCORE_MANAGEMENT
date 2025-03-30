@@ -20,12 +20,20 @@ public class MonHocService {
     @Autowired
     private GiangVienRepository giangVienRepository;
 
+    @Autowired
+    private DiemService diemService;
+
+
+    //Admin
+    // Lấy danh sách Môn Hoc
     public List<MonHocDTO> getAllMonHoc() {
         return monHocRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
     }
+
     public boolean existsByTenMH(String tenMH) {
         return monHocRepository.existsByTenMH(tenMH);
     }
+
     public MonHocDTO getMonHocById(Integer id) {
         return monHocRepository.findById(id).map(this::convertToDTO).orElse(null);
     }
@@ -48,6 +56,11 @@ public class MonHocService {
     }
 
     public boolean updateMonHoc(Integer id, MonHocDTO monHocDTO) {
+
+        if (diemService.existsByMaMH(id)) {
+            throw new IllegalStateException("Môn học đã có điểm, không thể sửa!");
+        }
+
         return monHocRepository.findById(id).map(monHoc -> {
             monHoc.setTenMH(monHocDTO.getTenMH());
             monHoc.setSoTinChi(monHocDTO.getSoTinChi());
@@ -62,6 +75,11 @@ public class MonHocService {
     }
 
     public boolean deleteMonHoc(Integer id) {
+
+        if (diemService.existsByMaMH(id)) {
+            throw new IllegalStateException("Môn học đã có điểm, không thể xóa!");
+        }
+
         if (monHocRepository.existsById(id)) {
             monHocRepository.deleteById(id);
             return true;
@@ -74,7 +92,8 @@ public class MonHocService {
                 monHoc.getMaMH(),
                 monHoc.getTenMH(),
                 monHoc.getSoTinChi(),
-                monHoc.getMaGV() != null ? monHoc.getMaGV().getMaGV() : null
+                monHoc.getMaGV() != null ? monHoc.getMaGV().getMaGV() : null,
+                monHoc.getMaGV().getTenGV()
         );
     }
 
@@ -87,7 +106,7 @@ public class MonHocService {
 
         List<MonHocDTO> monHocDTOList = new ArrayList<>();
 
-        for(MonHocEntity monHocEntity : listMH){
+        for (MonHocEntity monHocEntity : listMH) {
             MonHocDTO monHocDTO = convertToDTO(monHocEntity);
             monHocDTOList.add(monHocDTO);
         }
@@ -95,6 +114,7 @@ public class MonHocService {
         return monHocDTOList;
 
     }
+
     public List<MonHocDTO> findMonHocByTenMHGanDung(String tenMH) {
         List<MonHocEntity> monHocList = monHocRepository.findByTenMHContainingIgnoreCase(tenMH);
         return monHocList.stream().map(this::convertToDTO).collect(Collectors.toList());

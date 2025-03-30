@@ -5,15 +5,26 @@ public class MonHocDTO {
     private String tenMH;
     private Integer soTinChi;
     private Integer maGV;
+    private String tenGV;
+
 
     public MonHocDTO() {
     }
 
-    public MonHocDTO(Integer maMH, String tenMH, Integer soTinChi, Integer maGV) {
+    public MonHocDTO(Integer maMH, String tenMH, Integer soTinChi, Integer maGV, String tenGV) {
         this.maMH = maMH;
         this.tenMH = tenMH;
         this.soTinChi = soTinChi;
         this.maGV = maGV;
+        this.tenGV = tenGV;
+    }
+
+    public String getTenGV() {
+        return tenGV;
+    }
+
+    public void setTenGV(String tenGV) {
+        this.tenGV = tenGV;
     }
 
     public Integer getMaMH() {

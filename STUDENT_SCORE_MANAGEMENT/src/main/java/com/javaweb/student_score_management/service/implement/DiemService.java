@@ -35,6 +35,10 @@ public class DiemService {
         return diemRepository.getDiemDetailsByMaSV(maSV);
     }
 
+    public boolean existsByMaMH(Integer maMH) {
+        return diemRepository.existsByMaMH_MaMH(maMH);
+    }
+
     public List<DiemEntity> findByMaSVAndMaMH(Integer maSV, Integer maMH) {
         SinhVienEntity sinhVien = sinhVienRepository.findById(maSV)
                 .orElseThrow(() -> new RuntimeException("Sinh viên không tồn tại!"));
@@ -109,6 +113,11 @@ public class DiemService {
         return diemEntities.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    public List<DiemDTO> getDiemByMaSV(Integer maSV) {
+        List<DiemEntity> list = diemRepository.findByMaSV_MaSV(maSV);
+        return list.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
     public boolean createDiem(DiemDTO diemDTO) {
         try {
             SinhVienEntity sinhVien = sinhVienRepository.findById(diemDTO.getMaSV())
@@ -181,10 +190,11 @@ public class DiemService {
         return new DiemDTO(
                 diemEntity.getMaDiem(),
                 diemEntity.getMaSV().getMaSV(),
-                diemEntity.getMaMH().getMaMH(),
                 diemEntity.getMaSV().getTenSV(),
-                diemEntity.getMaMH().getMaGV().getTenGV(),
+                diemEntity.getMaMH().getMaMH(),
                 diemEntity.getMaMH().getTenMH(),
+                diemEntity.getMaMH().getMaGV().getMaGV(),
+                diemEntity.getMaMH().getMaGV().getTenGV(),
                 diemEntity.getMaMH().getSoTinChi(),
                 diemEntity.getDiem()
         );

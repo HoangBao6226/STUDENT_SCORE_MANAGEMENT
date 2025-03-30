@@ -18,6 +18,10 @@ import java.util.Optional;
 //}
 @Repository
 public interface DiemRepository extends JpaRepository<DiemEntity, Integer> {
+
+    boolean existsByMaMH_MaMH(Integer maMH);
+    List<DiemEntity> findByMaSV_MaSV(Integer maSV);
+
     @Query("SELECT d FROM DiemEntity d " +
             "JOIN FETCH d.maSV sv " +
             "JOIN FETCH d.maMH mh " +
@@ -28,4 +32,8 @@ public interface DiemRepository extends JpaRepository<DiemEntity, Integer> {
     List<DiemEntity> findByMaSVAndMaMH(SinhVienEntity maSV, MonHocEntity maMH);
 
     List<DiemEntity> findByMaMH(MonHocEntity maMH);
+
+
+
+
 }

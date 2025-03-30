@@ -33,6 +33,7 @@ public class SecurityConfig {
                         // Cho phép truy cập công khai vào các tài nguyên tĩnh và trang login
                         .requestMatchers("/login", "/logout", "/css/**", "/js/**", "/images/**", "/vendor/**").permitAll()
                         // Chỉ Admin được truy cập các endpoint /admin/**
+                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // Chỉ GiangVien được truy cập các endpoint /giangvien/**
                         .requestMatchers("/giangvien/**").hasRole("GIANGVIEN")

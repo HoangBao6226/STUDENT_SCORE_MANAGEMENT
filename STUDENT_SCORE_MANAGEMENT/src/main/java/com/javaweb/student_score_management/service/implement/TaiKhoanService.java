@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -53,10 +54,40 @@ public class TaiKhoanService {
         return taiKhoanRepository.findByUsername(username).orElse(null);
     }
 
-    public List<TaiKhoanEntity> getAllTaiKhoan() {
-        return taiKhoanRepository.findAll();
+    public List<TaiKhoanDTO> getAllTaiKhoan() {
+        List<TaiKhoanEntity> listTaiKhoan = taiKhoanRepository.findAll();
+        return listTaiKhoan.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    private TaiKhoanDTO convertToDTO(TaiKhoanEntity taiKhoan) {
+        String name = "";
+        Integer maChuTK = null;
+        String email = "";
+
+        if (taiKhoan.getMaAdmin() != null) {
+            name = taiKhoan.getMaAdmin().getTenAdmin();
+            maChuTK = taiKhoan.getMaAdmin().getMaAdmin();
+            email = taiKhoan.getMaAdmin().getEmail();
+        } else if (taiKhoan.getMaGV() != null) {
+            name = taiKhoan.getMaGV().getTenGV();
+            maChuTK = taiKhoan.getMaGV().getMaGV();
+            email = taiKhoan.getMaGV().getEmail();
+        } else if (taiKhoan.getMaSV() != null) {
+            name = taiKhoan.getMaSV().getTenSV();
+            maChuTK = taiKhoan.getMaSV().getMaSV();
+            email = taiKhoan.getMaSV().getEmail();
+        }
+
+        return new TaiKhoanDTO(
+                taiKhoan.getRole().toString(),
+                taiKhoan.getUsername(),
+                taiKhoan.getPassword(),
+                email,
+                name,
+                taiKhoan.getMaTK(),
+                maChuTK
+        );
+    }
     public Boolean create(TaiKhoanDTO taiKhoan) {
         try {
             if (taiKhoanRepository.existsByUsername(taiKhoan.getUsername())) {
@@ -114,8 +145,11 @@ public class TaiKhoanService {
         try {
             Optional<TaiKhoanEntity> optionalTaiKhoan = taiKhoanRepository.findById(taiKhoan.getMaTK());
             if (optionalTaiKhoan.isPresent()) {
+
                 TaiKhoanEntity taiKhoanEntity = optionalTaiKhoan.get();
                 taiKhoanEntity.setUsername(taiKhoan.getUsername());
+                taiKhoanEntity.getMaGV().setTenGV(taiKhoan.getName());
+
                 if (taiKhoan.getPassword() != null && !taiKhoan.getPassword().isEmpty()) {
                     taiKhoanEntity.setPassword(passwordEncoder.encode(taiKhoan.getPassword()));
                 }

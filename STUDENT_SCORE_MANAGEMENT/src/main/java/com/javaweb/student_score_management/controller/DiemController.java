@@ -50,35 +50,40 @@ public class DiemController {
         return "bangdiem";
     }
 
-    @GetMapping("/admin/diem")
-    public String listDiem(Model model) {
-        List<DiemDTO> diemList = diemService.getAllDiem();
-        model.addAttribute("diemList", diemList);
-        return "admin/diem/index"; // Trả về template index.html
-    }
-
+    //Admin chỉ có quyền xem điểm
     // API lấy danh sách điểm (JSON)
-    @GetMapping("/api/diem")
+    @GetMapping("/admin/listDiem")
     @ResponseBody
     public ResponseEntity<List<DiemDTO>> getAllDiem() {
         return ResponseEntity.ok(diemService.getAllDiem());
     }
 
-
-
-    @DeleteMapping("/admin/diem/{id}")
-    public ResponseEntity<String> deleteDiem(@PathVariable Integer id) {
-        logger.info("Xóa điểm ID: {}", id);
-        boolean deleted = diemService.deleteDiem(id);
-        if (deleted) {
-            return ResponseEntity.ok("Xóa điểm thành công!");
-        } else {
-            return ResponseEntity.badRequest().body("Không tìm thấy điểm!");
-        }
+    //API lấy danh sách điểm (JSON) theo mã sv
+    @GetMapping("/admin/findDiemByMaSV/{maSV}")
+    @ResponseBody
+    public ResponseEntity<List<DiemDTO>> getDiemByMaSV(@PathVariable Integer maSV) {
+        return ResponseEntity.ok(diemService.getDiemByMaSV(maSV));
     }
 
+//    @DeleteMapping("/admin/diem/{id}")
+//    public ResponseEntity<String> deleteDiem(@PathVariable Integer id) {
+//        logger.info("Xóa điểm ID: {}", id);
+//        boolean deleted = diemService.deleteDiem(id);
+//        if (deleted) {
+//            return ResponseEntity.ok("Xóa điểm thành công!");
+//        } else {
+//            return ResponseEntity.badRequest().body("Không tìm thấy điểm!");
+//        }
+//    }
 
-
+//// Văn Huy =============================================================================
+//    @GetMapping("/admin/diem")
+//    public String listDiem(Model model) {
+//        List<DiemDTO> diemList = diemService.getAllDiem();
+//        model.addAttribute("diemList", diemList);
+//        return "admin/diem/index"; // Trả về template index.html
+//    }
+//=======================================================================================
     //Giảng viên
 
 
