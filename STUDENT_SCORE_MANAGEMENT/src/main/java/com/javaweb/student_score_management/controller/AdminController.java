@@ -3,9 +3,11 @@ package com.javaweb.student_score_management.controller;
 import com.javaweb.student_score_management.DTO.TaiKhoanDTO;
 import com.javaweb.student_score_management.entity.TaiKhoanEntity;
 import com.javaweb.student_score_management.repository.TaiKhoanRepository;
+import com.javaweb.student_score_management.service.implement.CustomUserDetails;
 import com.javaweb.student_score_management.service.implement.TaiKhoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +34,9 @@ public class AdminController {
     //Minh Anh vippro 2k3
     // Trang admin
     @GetMapping("/index")
-    public String adminIndex() {
+    public String adminIndex(Authentication authentication, Model model) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        model.addAttribute("taiKhoan", userDetails);
         return "admin/index";
     }
 
@@ -43,6 +47,10 @@ public class AdminController {
         return ResponseEntity.ok(taiKhoanService.getAllTaiKhoan());
     }
 
+//    @GetMapping("/index/listTaiKhoan")
+//    public String listTaiKhoan() {
+//        return "admin/index/listTaiKhoan/index";
+//    }
     // API thêm tài khoản (JSON)
     @PostMapping("/addTaiKhoan")
     public ResponseEntity<Map<String, String>> addAccount(@RequestBody TaiKhoanDTO taiKhoan) {
@@ -92,6 +100,22 @@ public class AdminController {
         } else {
             return ResponseEntity.badRequest().body("Không tìm thấy tài khoản với ID: " + id);
         }
+    }
+
+// Thymeleaf API
+    @GetMapping("/index/listTaiKhoan")
+    public String listTaiKhoan() {
+        return "admin/index/listTaiKhoan/index";
+    }
+
+    @GetMapping("/addTaiKhoan")
+    public String addTaiKhoan() {
+        return "admin/index/addTaiKhoan/add-TaiKhoan";
+    }
+
+    @GetMapping("/editTaiKhoan/{id}")
+    public String editTaiKhoan() {
+        return "admin/index/editTaiKhoan/edit-TaiKhoan";
     }
 
     // Văn Huy =================================================================================
