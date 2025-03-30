@@ -58,7 +58,7 @@
 
                         <div class="form-group">
                             <label>Vai Trò</label>
-                            <select class="form-control" id="account_type" name="account_type" disabled>
+                            <select class="form-control" id="account_type" name="account_type">
                                 <option value="Admin">Admin</option>
                                 <option value="GiangVien">Giảng Viên</option>
                                 <option value="SinhVien">Sinh Viên</option>
@@ -86,15 +86,68 @@
 
     <div th:replace="admin/layout/footer :: footer"></div>
 </div>
+
+<div th:replace="admin/layout/scripts :: scripts"></div>
 <script>
+    // Lấy ID từ URL
+    const urlParts = window.location.pathname.split('/');
+    const maTK = parseInt(urlParts[urlParts.length - 1]);
+
+    // Gọi API để lấy dữ liệu khi trang tải
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/admin/listTaiKhoan', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                console.log('Response status:', response.status); // Debug
+                if (!response.ok) {
+                    throw new Error('Không thể lấy danh sách tài khoản');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Danh sách tài khoản:', data); // Debug
+                const taiKhoan = data.find(tk => tk.maTK === maTK);
+                if (!taiKhoan) {
+                    const errorDiv = document.getElementById('error-message');
+                    errorDiv.querySelector('p').textContent = 'Không tìm thấy tài khoản với ID: ' + maTK;
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                // Điền dữ liệu vào form
+                document.getElementById('maTK').value = taiKhoan.maTK;
+                document.getElementById('username').value = taiKhoan.username;
+                document.getElementById('password').value = taiKhoan.password;
+                document.getElementById('email').value = taiKhoan.email;
+                document.getElementById('name').value = taiKhoan.name;
+                document.getElementById('account_type').value = taiKhoan.account_type;
+                document.getElementById('maChuTK').value = taiKhoan.maChuTK;
+
+                // Kiểm tra vai trò Admin
+                const isAdmin = taiKhoan.account_type === 'Admin';
+                document.getElementById('username').disabled = isAdmin;
+                document.getElementById('password').disabled = isAdmin;
+                document.getElementById('email').disabled = isAdmin;
+                document.getElementById('name').disabled = isAdmin;
+                document.getElementById('account_type').disabled = isAdmin;
+                document.getElementById('maChuTK').disabled = isAdmin;
+                document.getElementById('submitBtn').style.display = isAdmin ? 'none' : 'inline-block';
+                document.getElementById('admin-warning').style.display = isAdmin ? 'block' : 'none';
+            })
+            .catch(error => {
+                console.error('Lỗi khi lấy dữ liệu:', error); // Debug
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.querySelector('p').textContent = error.message || 'Có lỗi xảy ra khi lấy dữ liệu tài khoản!';
+                errorDiv.style.display = 'block';
+            });
+    });
+
     // Hàm gửi form
     function submitEditForm() {
-        if (isSubmitting) return;
-
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        isSubmitting = true;
-
         const maTK = document.getElementById('maTK').value;
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
@@ -108,8 +161,6 @@
             errorDiv.querySelector('p').textContent = 'Vui lòng điền đầy đủ Username, Password, Email và Họ Tên!';
             errorDiv.style.display = 'block';
             document.getElementById('success-message').style.display = 'none';
-            submitBtn.disabled = false;
-            isSubmitting = false;
             return;
         }
 
@@ -123,6 +174,8 @@
             maChuTK: maChuTK ? parseInt(maChuTK) : null
         };
 
+        console.log('Gửi dữ liệu:', taiKhoan); // Debug
+
         fetch(`/admin/editTaiKhoan/${maTK}`, {
             method: 'PUT',
             headers: {
@@ -131,12 +184,18 @@
             body: JSON.stringify(taiKhoan)
         })
             .then(response => {
+                console.log('PUT response status:', response.status); // Debug
                 if (!response.ok) {
-                    return response.json().then(error => { throw new Error(error.message); });
+                    return response.text().then(text => {
+                        console.log('PUT error response:', text); // Debug
+                        throw new Error(JSON.parse(text).message);
+                    });
                 }
-                return response.json();
+                return response.text();
             })
-            .then(data => {
+            .then(text => {
+                console.log('PUT success response:', text); // Debug
+                const data = JSON.parse(text);
                 const successDiv = document.getElementById('success-message');
                 successDiv.querySelector('p').textContent = data.message;
                 successDiv.style.display = 'block';
@@ -144,18 +203,14 @@
                 setTimeout(() => window.location.href = "/admin/index/listTaiKhoan", 2000);
             })
             .catch(error => {
+                console.error('Lỗi khi cập nhật:', error); // Debug
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.querySelector('p').textContent = error.message || 'Có lỗi xảy ra khi cập nhật tài khoản!';
                 errorDiv.style.display = 'block';
                 document.getElementById('success-message').style.display = 'none';
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                isSubmitting = false;
             });
     }
 </script>
-<div th:replace="admin/layout/scripts :: scripts"></div>
 
 </body>
 </html>
