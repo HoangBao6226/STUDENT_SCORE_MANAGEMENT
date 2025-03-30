@@ -85,14 +85,6 @@ public class GiangVienController {
         return ResponseEntity.ok(dsMonHoc);
     }
 
-    @GetMapping("/monhoc/{maGV}")
-    public String getMonHocByMaGV(@PathVariable int maGV, Model model) {
-        List<MonHocDTO> dsMonHoc = monHocService.getMonHocByMaGV(maGV);
-        model.addAttribute("dsMonHoc", dsMonHoc);
-        return "giangvien/monhoc";
-    }
-
-
     // Lấy SV theo học môn mình dạy
     @GetMapping("/monhoc/{maGV}/{maMH}")
     public ResponseEntity<List<DiemDTO>> getSVByMaMHAndMaGV(@PathVariable int maMH, @PathVariable int maGV) {

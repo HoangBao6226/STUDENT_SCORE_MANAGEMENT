@@ -34,6 +34,9 @@ public class ExcelService {
     @Autowired
     private DiemService diemService;
 
+    @Autowired
+    private EmailService emailService;
+
     public List<DiemDTO> importExcel(MultipartFile file) throws IOException {
         Workbook workbook = WorkbookFactory.create(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
@@ -57,6 +60,8 @@ public class ExcelService {
             }
 
             diemRepository.save(diemEntity);
+
+            emailService.sendScoreEmail(sv, mh, diemEntity.getDiem(), mh.getMaGV());
 
             DiemDTO diemDTO = diemService.convertToDTO(diemEntity);
 
