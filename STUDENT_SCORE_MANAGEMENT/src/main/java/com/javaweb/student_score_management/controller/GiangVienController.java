@@ -85,12 +85,12 @@ public class GiangVienController {
         return ResponseEntity.ok(dsMonHoc);
     }
 
-    @GetMapping("/monhoc/{maGV}")
-    public String getMonHocByMaGV(@PathVariable int maGV, Model model) {
-        List<MonHocDTO> dsMonHoc = monHocService.getMonHocByMaGV(maGV);
-        model.addAttribute("dsMonHoc", dsMonHoc);
-        return "giangvien/monhoc";
-    }
+//    @GetMapping("/monhoc/{maGV}")
+//    public String getMonHocByMaGV(@PathVariable int maGV, Model model) {
+//        List<MonHocDTO> dsMonHoc = monHocService.getMonHocByMaGV(maGV);
+//        model.addAttribute("dsMonHoc", dsMonHoc);
+//        return "giangvien/monhoc";
+//    }
 
 
     // Lấy SV theo học môn mình dạy

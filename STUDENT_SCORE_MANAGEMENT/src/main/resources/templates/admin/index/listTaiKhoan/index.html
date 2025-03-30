@@ -47,9 +47,9 @@
                                 <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
                             </td>
                         </tr>
-                        <tr th:unless="${#lists.size(list.?[role.name() == 'Admin']) > 0}">
-                            <td colspan="5" style="text-align: center;">Không có tài khoản Admin nào</td>
-                        </tr>
+<!--                        <tr th:unless="${#lists.size(list.?[role.name() == 'Admin']) > 0}">-->
+<!--                            <td colspan="5" style="text-align: center;">Không có tài khoản Admin nào</td>-->
+<!--                        </tr>-->
                         </tbody>
                     </table>
                 </div>
@@ -82,9 +82,9 @@
                                 <button th:onclick="'deleteAccount(' + ${account.maTK} + ')'" class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
-                        <tr th:unless="${#lists.size(list.?[role.name() == 'GiangVien']) > 0}">
-                            <td colspan="5" style="text-align: center;">Không có tài khoản Giảng Viên nào</td>
-                        </tr>
+<!--                        <tr th:unless="${#lists.size(list.?[role.name() == 'GiangVien']) > 0}">-->
+<!--                            <td colspan="5" style="text-align: center;">Không có tài khoản Giảng Viên nào</td>-->
+<!--                        </tr>-->
                         </tbody>
                     </table>
                 </div>
@@ -117,9 +117,9 @@
                                 <button th:onclick="'deleteAccount(' + ${account.maTK} + ')'" class="btn btn-danger btn-sm">Delete</button>
                             </td>
                         </tr>
-                        <tr th:unless="${#lists.size(list.?[role.name() == 'SinhVien']) > 0}">
-                            <td colspan="5" style="text-align: center;">Không có tài khoản Sinh Viên nào</td>
-                        </tr>
+<!--                        <tr th:unless="${#lists.size(list.?[role.name() == 'SinhVien']) > 0}">-->
+<!--                            <td colspan="5" style="text-align: center;">Không có tài khoản Sinh Viên nào</td>-->
+<!--                        </tr>-->
                         </tbody>
                     </table>
                 </div>
