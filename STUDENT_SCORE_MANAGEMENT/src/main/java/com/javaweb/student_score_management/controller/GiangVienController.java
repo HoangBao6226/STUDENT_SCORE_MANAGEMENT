@@ -62,6 +62,22 @@ public class GiangVienController {
         return "giangvien/index";
     }
 
+    // API render
+    @GetMapping("/monhoc")
+    public String renderGV_MH() {
+        return "giangvien/monhoc";
+    }
+
+    @GetMapping("/sinhvien")
+    public String renderGV_SV() {
+        return "giangvien/sinhvien";
+    }
+
+    @GetMapping("/excel")
+    public String renderGV_Excel() {
+        return "giangvien/excel";
+    }
+
     // Lấy MH mình dạy
     @GetMapping("/monhoc/{maGV}")
     public ResponseEntity<List<MonHocDTO>> getMonHocByMaGV(@PathVariable int maGV) {
