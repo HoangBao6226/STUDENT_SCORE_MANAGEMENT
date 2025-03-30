@@ -33,7 +33,10 @@ public interface DiemRepository extends JpaRepository<DiemEntity, Integer> {
 
     List<DiemEntity> findByMaMH(MonHocEntity maMH);
 
-
-
+    @Query("SELECT b FROM DiemEntity b " +
+            "WHERE b.maSV = :maSV " +
+            "AND b.maMH = :maMH " +
+            "AND b.diem IS NULL")
+    DiemEntity getDiemNull(SinhVienEntity maSV, MonHocEntity maMH);
 
 }
