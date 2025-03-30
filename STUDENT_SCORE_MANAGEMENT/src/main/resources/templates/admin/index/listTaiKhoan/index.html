@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <head th:replace="admin/layout/head :: head"></head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -21,8 +21,21 @@
         </section>
 
         <section class="content">
+            <!-- Thông báo động -->
+            <div id="alert-container"></div>
+
+            <!-- Thông báo từ server (Thymeleaf) -->
+            <div th:if="${message}" class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p th:text="${message}"></p>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <p th:text="${error}"></p>
+            </div>
+
             <!-- Bảng Admin -->
-            <div class="box">
+            <div class="box" id="admin-table">
                 <div class="box-header with-border">
                     <h3 class="box-title">Danh Sách Admin</h3>
                 </div>
@@ -30,33 +43,20 @@
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
-                            <th style="width: 10%;">ID</th>
+                            <th style="width: 10%;">Mã TK</th>
                             <th style="width: 20%;">Username</th>
                             <th style="width: 25%;">Password</th>
-                            <th style="width: 25%;">Tên Admin</th>
+                            <th style="width: 25%;">Tên</th>
                             <th style="width: 20%;">Tùy Chọn</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="account : ${list}" th:if="${account.role.name() == 'Admin'}">
-                            <td th:text="${account.maTK}"></td>
-                            <td th:text="${account.username}"></td>
-                            <td th:text="${#strings.substring(account.password, 0, 10)} + '...'"></td>
-                            <td th:text="${account.maAdmin != null ? account.maAdmin.tenAdmin : 'N/A'}"></td>
-                            <td>
-                                <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
-                            </td>
-                        </tr>
-<!--                        <tr th:unless="${#lists.size(list.?[role.name() == 'Admin']) > 0}">-->
-<!--                            <td colspan="5" style="text-align: center;">Không có tài khoản Admin nào</td>-->
-<!--                        </tr>-->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
 
             <!-- Bảng Giảng Viên -->
-            <div class="box">
+            <div class="box" id="giangvien-table">
                 <div class="box-header with-border">
                     <h3 class="box-title">Danh Sách Giảng Viên</h3>
                 </div>
@@ -64,34 +64,20 @@
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
-                            <th style="width: 10%;">ID</th>
+                            <th style="width: 10%;">Mã TK</th>
                             <th style="width: 20%;">Username</th>
                             <th style="width: 25%;">Password</th>
                             <th style="width: 25%;">Tên Giảng Viên</th>
                             <th style="width: 20%;">Tùy Chọn</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="account : ${list}" th:if="${account.role.name() == 'GiangVien'}">
-                            <td th:text="${account.maTK}"></td>
-                            <td th:text="${account.username}"></td>
-                            <td th:text="${#strings.substring(account.password, 0, 10)} + '...'"></td>
-                            <td th:text="${account.maGV != null ? account.maGV.tenGV : 'N/A'}"></td>
-                            <td>
-                                <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
-                                <button th:onclick="'deleteAccount(' + ${account.maTK} + ')'" class="btn btn-danger btn-sm">Delete</button>
-                            </td>
-                        </tr>
-<!--                        <tr th:unless="${#lists.size(list.?[role.name() == 'GiangVien']) > 0}">-->
-<!--                            <td colspan="5" style="text-align: center;">Không có tài khoản Giảng Viên nào</td>-->
-<!--                        </tr>-->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
 
             <!-- Bảng Sinh Viên -->
-            <div class="box">
+            <div class="box" id="sinhvien-table">
                 <div class="box-header with-border">
                     <h3 class="box-title">Danh Sách Sinh Viên</h3>
                 </div>
@@ -99,28 +85,14 @@
                     <table class="table table-bordered" style="table-layout: fixed; width: 100%;">
                         <thead>
                         <tr>
-                            <th style="width: 10%;">ID</th>
+                            <th style="width: 10%;">Mã TK</th>
                             <th style="width: 20%;">Username</th>
                             <th style="width: 25%;">Password</th>
                             <th style="width: 25%;">Tên Sinh Viên</th>
                             <th style="width: 20%;">Tùy Chọn</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr th:each="account : ${list}" th:if="${account.role.name() == 'SinhVien'}">
-                            <td th:text="${account.maTK}"></td>
-                            <td th:text="${account.username}"></td>
-                            <td th:text="${#strings.substring(account.password, 0, 10)} + '...'"></td>
-                            <td th:text="${account.maSV != null ? account.maSV.tenSV : 'N/A'}"></td>
-                            <td>
-                                <a th:href="@{/admin/editTaiKhoan/{id}(id=${account.maTK})}" class="btn btn-success btn-sm">Edit</a>
-                                <button th:onclick="'deleteAccount(' + ${account.maTK} + ')'" class="btn btn-danger btn-sm">Delete</button>
-                            </td>
-                        </tr>
-<!--                        <tr th:unless="${#lists.size(list.?[role.name() == 'SinhVien']) > 0}">-->
-<!--                            <td colspan="5" style="text-align: center;">Không có tài khoản Sinh Viên nào</td>-->
-<!--                        </tr>-->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
@@ -131,5 +103,132 @@
 </div>
 
 <div th:replace="admin/layout/scripts :: scripts"></div>
+<script>
+    function populateTable(data, tableId) {
+        const tableBody = document.querySelector(`#${tableId} tbody`);
+        if (!tableBody) {
+            console.error(`Không tìm thấy tbody cho bảng: ${tableId}`);
+            return;
+        }
+
+        tableBody.innerHTML = ''; // Xóa dữ liệu cũ
+
+        if (!data || data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5">Không có dữ liệu</td></tr>';
+            return;
+        }
+
+        data.forEach(item => {
+            const maskedPassword = item.password ? item.password.substring(0, 10) + '...' : '';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.maTK || ''}</td>
+                <td>${item.username || ''}</td>
+                <td>${maskedPassword}</td>
+                <td>${item.name || ''}</td>
+                <td>
+                    <a href="/admin/editTaiKhoan/${item.maTK}" class="btn btn-primary btn-sm">Sửa</a>
+                    <button class="btn btn-danger btn-sm" onclick="deleteAccount(${item.maTK})">Xóa</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Hàm xóa tài khoản
+    function deleteAccount(id) {
+        if (!confirm("Bạn có chắc muốn xóa tài khoản này?")) {
+            return;
+        }
+
+        fetch(`/admin/deleteTaiKhoan/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(err => { throw new Error(err); });
+                }
+                return response.text();
+            })
+            .then(message => {
+                showAlert('success', message);
+                setTimeout(() => location.reload(), 1500);
+            })
+            .catch(error => {
+                showAlert('danger', error.message || 'Có lỗi xảy ra khi xóa tài khoản!');
+            });
+    }
+
+    // Hàm hiển thị thông báo
+    function showAlert(type, message) {
+        const alertContainer = document.getElementById('alert-container');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.style.zIndex = '1000'; // Đảm bảo thông báo nằm trên các phần tử khác
+        alertDiv.innerHTML = `
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <p>${message}</p>
+        `;
+        alertContainer.appendChild(alertDiv);
+        setTimeout(() => alertDiv.remove(), 3000); // Xóa thông báo sau 5 giây
+    }
+    // Lấy ID từ URL
+    const urlParts = window.location.pathname.split('/');
+    const maTK = parseInt(urlParts[urlParts.length - 1]);
+
+    // Biến kiểm soát trạng thái gửi
+    let isSubmitting = false;
+
+    // Gọi API để lấy dữ liệu khi trang tải
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/admin/listTaiKhoan', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Không thể lấy danh sách tài khoản');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const taiKhoan = data.find(tk => tk.maTK === maTK);
+                if (!taiKhoan) {
+                    throw new Error('Không tìm thấy tài khoản với ID: ' + maTK);
+                }
+
+                // Điền dữ liệu vào form
+                document.getElementById('maTK').value = taiKhoan.maTK;
+                document.getElementById('username').value = taiKhoan.username;
+                document.getElementById('password').value = taiKhoan.password;
+                document.getElementById('email').value = taiKhoan.email;
+                document.getElementById('name').value = taiKhoan.name;
+                document.getElementById('account_type').value = taiKhoan.account_type;
+                document.getElementById('maChuTK').value = taiKhoan.maChuTK || '';
+
+                // Kiểm tra vai trò Admin
+                const isAdmin = taiKhoan.account_type === 'Admin';
+                document.getElementById('username').disabled = isAdmin;
+                document.getElementById('password').disabled = isAdmin;
+                document.getElementById('email').disabled = isAdmin;
+                document.getElementById('name').disabled = isAdmin;
+                document.getElementById('account_type').disabled = isAdmin;
+                document.getElementById('maChuTK').disabled = isAdmin;
+                document.getElementById('submitBtn').style.display = isAdmin ? 'none' : 'inline-block';
+                document.getElementById('admin-warning').style.display = isAdmin ? 'block' : 'none';
+            })
+            .catch(error => {
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.querySelector('p').textContent = error.message;
+                errorDiv.style.display = 'block';
+            });
+    });
+
+</script>
 </body>
 </html>

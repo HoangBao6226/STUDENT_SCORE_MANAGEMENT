@@ -101,7 +101,7 @@ public class MonHocController {
     }
 
     //Thymeleaf API
-    @GetMapping("/api/monhoc")
+    @GetMapping("/admin/monhoc")
     public String listMonHoc() {
         return "admin/monhoc/index";
     }

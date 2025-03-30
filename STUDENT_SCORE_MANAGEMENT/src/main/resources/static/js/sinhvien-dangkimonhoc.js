@@ -22,8 +22,8 @@ if (!window.dangKyMonHocInitialized) {
 
         // Hàm lấy danh sách môn học có sẵn
         function fetchMonHocList() {
-            console.log('Fetching available subjects from /api/monhoc');
-            fetch('/api/monhoc', {
+            console.log('Fetching available subjects from /admin/listMonHoc');
+            fetch('/admin/listMonHoc', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

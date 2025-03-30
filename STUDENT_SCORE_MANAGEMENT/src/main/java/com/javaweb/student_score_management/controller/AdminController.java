@@ -110,12 +110,12 @@ public class AdminController {
 
     @GetMapping("/addTaiKhoan")
     public String addTaiKhoan() {
-        return "admin/index/addTaiKhoan/add-TaiKhoan";
+        return "admin/index/listTaiKhoan/add-TaiKhoan";
     }
 
     @GetMapping("/editTaiKhoan/{id}")
     public String editTaiKhoan() {
-        return "admin/index/editTaiKhoan/edit-TaiKhoan";
+        return "admin/index/listTaiKhoan/edit-TaiKhoan";
     }
 
     // Văn Huy =================================================================================
