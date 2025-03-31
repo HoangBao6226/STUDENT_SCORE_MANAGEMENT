@@ -17,6 +17,9 @@
     </section>
 
     <section class="content">
+      <!-- Hidden input để lưu maGV từ Authentication -->
+      <input type="hidden" id="maGV" th:value="${#authentication.principal.maGV ?: ''}">
+
       <!-- Thông báo lỗi -->
       <div th:if="${error}" class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -38,17 +41,9 @@
               <th style="width: 20%;">Tùy Chọn</th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:if="${dsMonHoc == null or dsMonHoc.isEmpty()}">
-              <td colspan="4" style="text-align: center;">Không có môn học nào</td>
-            </tr>
-            <tr th:each="monHoc : ${dsMonHoc}">
-              <td th:text="${monHoc.maMH}"></td>
-              <td th:text="${monHoc.tenMH}"></td>
-              <td th:text="${monHoc.soTinChi}"></td>
-              <td>
-                <a th:href="@{/giangvien/monhoc/{maGV}/{maMH}(maGV=${maGV}, maMH=${monHoc.maMH})}" class="btn btn-info btn-sm">Xem danh sách SV</a>
-              </td>
+            <tbody id="monHocTableBody">
+            <tr>
+              <td colspan="4" style="text-align: center;">Đang tải dữ liệu...</td>
             </tr>
             </tbody>
           </table>
@@ -61,5 +56,57 @@
 </div>
 
 <div th:replace="giangvien/layout/scripts :: scripts"></div>
+
+<!-- Script để lấy dữ liệu từ API -->
+<script th:inline="javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    const maGV = document.getElementById('maGV').value.trim();
+
+    if (maGV) {
+      fetch(`/giangvien/monhoc/${maGV}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then(data => {
+                const tbody = document.getElementById('monHocTableBody');
+                tbody.innerHTML = ''; // Xóa nội dung "Đang tải dữ liệu..."
+
+                if (!data || data.length === 0) {
+                  tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Không có môn học nào</td></tr>';
+                } else {
+                  data.forEach(monHoc => {
+                    const row = `
+  <tr>
+    <td>${monHoc.maMH || 'N/A'}</td>
+    <td>${monHoc.tenMH || 'N/A'}</td>
+    <td>${monHoc.soTinChi || 'N/A'}</td>
+    <td>
+      <a href="/giangvien/sinhvien?maGV=${maGV}&maMH=${monHoc.maMH || ''}" class="btn btn-info btn-sm">Xem danh sách SV</a>
+    </td>
+  </tr>`;
+                    tbody.innerHTML += row;
+                  });
+                }
+              })
+              .catch(error => {
+                console.error('Lỗi khi lấy danh sách môn học:', error);
+                document.getElementById('monHocTableBody').innerHTML =
+                        '<tr><td colspan="4" style="text-align: center;">Có lỗi xảy ra khi tải dữ liệu: ' + error.message + '</td></tr>';
+              });
+    } else {
+      document.getElementById('monHocTableBody').innerHTML =
+              '<tr><td colspan="4" style="text-align: center;">Vui lòng đăng nhập hoặc tài khoản không có mã giảng viên</td></tr>';
+    }
+  });
+</script>
 </body>
 </html>

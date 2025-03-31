@@ -18,9 +18,8 @@
     </section>
 
     <section class="content">
-      <!-- Hidden inputs to store maGV and maMH for JavaScript -->
-      <input type="hidden" id="maGV" th:value="${maGV}">
-      <input type="hidden" id="maMH" th:value="${maMH}">
+      <!-- Hidden input để lưu maGV từ Authentication -->
+      <input type="hidden" id="maGV" th:value="${#authentication.principal.maGV ?: ''}">
 
       <!-- Thông báo lỗi -->
       <div th:if="${error}" class="alert alert-danger alert-dismissible">
@@ -44,14 +43,16 @@
             <thead>
             <tr>
               <th style="width: 15%;">Mã SV</th>
-              <th style="width: 20%;">Tên SV</th>
-              <th style="width: 20%;">Tên GV</th>
-              <th style="width: 15%;">Mã MH</th>
-              <th style="width: 30%;">Tùy Chọn</th>
+              <th style="width: 35%;">Tên SV</th>
+              <th style="width: 30%;">Tên GV</th>
+              <th style="width: 10%;">Mã MH</th>
+              <th style="width: 10%;">Điểm</th>
             </tr>
             </thead>
             <tbody id="sinhVienTableBody">
-            <!-- Table body will be populated dynamically by JavaScript -->
+            <tr>
+              <td colspan="6" style="text-align: center;">Đang tải dữ liệu...</td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -63,7 +64,64 @@
 </div>
 
 <div th:replace="giangvien/layout/scripts :: scripts"></div>
-<!-- Include the custom JavaScript file -->
-<script th:src="@{/js/sinhvien.js}"></script>
+
+<!-- Script để lấy dữ liệu từ API -->
+<script th:inline="javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    const maGV = document.getElementById('maGV').value.trim();
+    const urlParams = new URLSearchParams(window.location.search);
+    const maMH = urlParams.get('maMH');
+
+    if (maGV && maMH) {
+      fetch(`/giangvien/monhoc/${maGV}/${maMH}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then(data => {
+                const tbody = document.getElementById('sinhVienTableBody');
+                tbody.innerHTML = ''; // Xóa nội dung "Đang tải dữ liệu..."
+
+                if (!data || data.length === 0) {
+                  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Không có sinh viên nào</td></tr>';
+                } else {
+                  data.forEach(diem => {
+                    const row = `
+              <tr>
+                <td>${diem.maSV || 'N/A'}</td>
+                <td>${diem.tenSV || 'N/A'}</td>
+                <td>${diem.tenGV || 'N/A'}</td>
+                <td>${diem.maMH || 'N/A'}</td>
+                <td>${diem.diem || 'Chưa có điểm'}</td>
+              </tr>`;
+                    tbody.innerHTML += row;
+                  });
+                }
+              })
+              .catch(error => {
+                console.error('Lỗi khi lấy danh sách sinh viên:', error);
+                document.getElementById('sinhVienTableBody').innerHTML =
+                        '<tr><td colspan="6" style="text-align: center;">Có lỗi xảy ra khi tải dữ liệu: ' + error.message + '</td></tr>';
+              });
+    } else {
+      document.getElementById('sinhVienTableBody').innerHTML =
+              '<tr><td colspan="6" style="text-align: center;">Thiếu mã giảng viên hoặc mã môn học</td></tr>';
+    }
+  });
+
+  // Hàm xử lý khi nhấn nút "Xem chi tiết"
+  function viewDetails(maSV) {
+    alert('Xem chi tiết sinh viên với mã: ' + maSV);
+    // Có thể thêm logic để chuyển hướng hoặc hiển thị modal chi tiết sinh viên
+  }
+</script>
 </body>
 </html>

@@ -40,14 +40,34 @@ public class SinhVienController {
         model.addAttribute("taiKhoan", userDetails);
         return "sinhvien/index";
     }
-
     @GetMapping("/dangkimonhoc")
-    public String dangKyMonHoc() {
+    public String dangKyMonHoc(Authentication authentication, Model model) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if (userDetails.getRole() != TaiKhoanEntity.Role.SinhVien) {
+            model.addAttribute("error", "Bạn không có quyền truy cập trang này!");
+            return "sinhvien/dangkimonhoc";
+        }
+        if (userDetails.getMaSV() == null) {
+            model.addAttribute("error", "Tài khoản của bạn không được liên kết với sinh viên nào!");
+            return "sinhvien/dangkimonhoc";
+        }
+        model.addAttribute("taiKhoan", userDetails);
         return "sinhvien/dangkimonhoc";
     }
 
     @GetMapping("/bangdiem/{maSV}")
-    public String bangDiem() {
+    public String bangDiem(@PathVariable Integer maSV, Authentication authentication, Model model) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        if (userDetails.getRole() != TaiKhoanEntity.Role.SinhVien) {
+            model.addAttribute("error", "Bạn không có quyền truy cập trang này!");
+            return "sinhvien/bangdiem";
+        }
+        if (userDetails.getMaSV() == null || !userDetails.getMaSV().equals(maSV)) {
+            model.addAttribute("error", "Bạn không có quyền truy cập bảng điểm này!");
+            return "sinhvien/bangdiem";
+        }
+
+        model.addAttribute("maSV", maSV);
         return "sinhvien/bangdiem";
     }
 
